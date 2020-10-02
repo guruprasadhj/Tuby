@@ -1,12 +1,13 @@
-# TUBY
-### Super Fast ⚡ YouTube Downloader  
+# TUBY 
+### Super Fast ⚡ . YouTube ▶️ . Downloader ⬇️  
 #### If you have Doubt in it. Check it Out.
 
 Tuby is freeware and Open-Source Software written in python, which can download youtube videos at super fast ⚡. For now there the software is Initial Stage. It may take time to construct my entire Idea.
 
 ## Installation
 _____
-
+\
+c
 
 ## Dependency to Run Code
 ___
@@ -16,9 +17,16 @@ ___
 
 ### Library
 - pytube
-- PIL
+- PIL(pillow)
+- PyperClip
 
 ## Contribute
 ___
 Contributions are always welcome!\
 Just Fork and Good to go....
+😋  😊  😇
+ 
+
+## License
+___
+[MIT](https://tldrlegal.com/license/mit-license)
