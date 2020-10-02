@@ -3,7 +3,12 @@
 #### If you have Doubt in it. Check it Out.
 
 Tuby is freeware and Open-Source Software written in python, which can download youtube videos at super fast ⚡. For now there the software is Initial Stage. It may take time to construct my entire Idea.
-
+## Features
+- Light-Weight 💨
+- Super FAST 🔥
+- Productive 🧲
+- Easy Use UI 💻
+___
 ## Installation
 
 \
