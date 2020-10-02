@@ -34,5 +34,5 @@ Just Fork and Good to go....
 ___
 ## License
 
-[MIT](https://tldrlegal.com/license/mit-license)
+[MIT](https://github.com/guruprasadhj/Tuby/blob/master/LICENSE)
 ___
