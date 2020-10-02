@@ -4,7 +4,7 @@ from tkinter import filedialog,messagebox
 from PIL import Image,ImageTk
 from pytube import YouTube
 from threading import *
-import webbrowser,os,pyperclip
+import webbrowser,os,pyperclip,sys
 
 
 
@@ -34,14 +34,14 @@ class tuby():
     def __init__(self):
         self.root= Tk(className='Tuby')
         self.root.geometry('600x350')
-        iconres= resource_path("ytlogo.png")
+        iconres= resource_path("Image/ytlogo.png")
         icon = PhotoImage(file = iconres)
         self.root.iconphoto(False, icon)
         self.root.title("Tuby an YouTube video dowmloader  (3.5.7)")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root['bg'] = 'black'
         self.root.resizable(0,0)
-        imgres=resource_path("ytlogo.png")
+        imgres=resource_path("Image/ytlogo.png")
         img  = Image.open(imgres)
         img  = img.resize((80,80),Image.ANTIALIAS)
         img  = ImageTk.PhotoImage(img)
@@ -49,7 +49,7 @@ class tuby():
         self.head.config(anchor = CENTER)
         self.head.pack()
 
-        self.about = Button(text = "i",bg='black',fg='white',font = ('Courier 15 bold'), command = self.about,activebackground='red')
+        self.about = Button(text = "i",bg='black',fg='white',font = ('Courier 15 bold'), command = webbrowser.open("https://gpstudiolaboftech.github.io/"),activebackground='red')
         self.about.place(x="560",y="0")
 
         self.enter_url = Label(self.root,text = 'Enter URL:\n(ctrl+v)',bg='black',fg='white')
@@ -60,7 +60,7 @@ class tuby():
         self.url.place(x=125,y=125)
         check(urlClip,YouTubeURL)
 
-        download_button_img_res = resource_path("download.png")
+        download_button_img_res = resource_path("Image/download.png")
         download_button_img = Image.open(download_button_img_res)
         download_button_img = download_button_img.resize((150,50),Image.ANTIALIAS)
         download_button_img = ImageTk.PhotoImage(download_button_img)
@@ -143,8 +143,8 @@ class tuby():
         #root.destroy()
         os._exit(0)
     
-    def about(self):
-        webbrowser.open("https://gpstudiolaboftech.github.io/")
+    
+        
         
     
     
