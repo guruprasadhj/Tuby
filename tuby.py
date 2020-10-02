@@ -23,12 +23,6 @@ urlClip = pyperclip.paste()
 YouTubeURL = 'https://www.youtube.com/watch?v='
 #print(urlClip)
 
-def check(urlClip, YouTubeURL):
-    if (urlClip.find(YouTubeURL) == -1): 
-        print('Paste A Link')
-    else:
-        print('Hello')
-    #url.insert(0, urlClip)
 
 class tuby():
     def __init__(self):
@@ -49,7 +43,7 @@ class tuby():
         self.head.config(anchor = CENTER)
         self.head.pack()
 
-        self.about = Button(text = "i",bg='black',fg='white',font = ('Courier 15 bold'), command = webbrowser.open("https://gpstudiolaboftech.github.io/"),activebackground='red')
+        self.about = Button(text = "i",bg='black',fg='white',font = ('Courier 15 bold'), command = self.info,activebackground='red')
         self.about.place(x="560",y="0")
 
         self.enter_url = Label(self.root,text = 'Enter URL:\n(ctrl+v)',bg='black',fg='white')
@@ -58,7 +52,7 @@ class tuby():
 
         self.url = Entry(self.root, width = 35,border=1, relief= SUNKEN , font = ('verdana',15))
         self.url.place(x=125,y=125)
-        check(urlClip,YouTubeURL)
+        self.check(urlClip,YouTubeURL)
 
         download_button_img_res = resource_path("Image/download.png")
         download_button_img = Image.open(download_button_img_res)
@@ -77,6 +71,11 @@ class tuby():
         self.root.bind('<Control-v>', self.paste)
 
         self.root.mainloop()
+    def check(self,urlClip, YouTubeURL):
+        if (urlClip.find(YouTubeURL) == -1): 
+            print('Paste A Link')
+        else:
+            self.url.insert(0, urlClip)
 
 
     def on_closing(self,*arg):
@@ -143,7 +142,8 @@ class tuby():
         #root.destroy()
         os._exit(0)
     
-    
+    def info(self ,*args):
+        webbrowser.open("https://gpstudiolaboftech.github.io/")
         
         
     
