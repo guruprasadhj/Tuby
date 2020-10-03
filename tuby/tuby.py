@@ -25,16 +25,16 @@ class tuby():
         print("                  |___/ ")
         urlClip = pyperclip.paste()
         YouTubeURL = 'https://www.youtube.com/watch?v='
-        self.root= Tk(className='Tuby d')
+        self.root= Tk(className='Tuby')
         self.root.geometry('600x350')
-        iconres= self.resource_path("assets/favicon.png")
+        iconres= self.resource_path("tuby/assets/favicon.png")
         icon = PhotoImage(file = iconres)
         self.root.iconphoto(False, icon)
         self.root.title("Tuby an YouTube video dowmloader  (3.5.7)")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root['bg'] = 'black'
         self.root.resizable(0,0)
-        imgres=self.resource_path("assets/favicon.png")
+        imgres=self.resource_path("tuby/assets/favicon.png")
         img  = Image.open(imgres)
         img  = img.resize((80,80),Image.ANTIALIAS)
         img  = ImageTk.PhotoImage(img)
@@ -53,7 +53,7 @@ class tuby():
         self.url.place(x=125,y=125)
         self.check(urlClip,YouTubeURL)
 
-        download_button_img_res = self.resource_path("assets/download.png")
+        download_button_img_res = self.resource_path("tuby/assets/download.png")
         download_button_img = Image.open(download_button_img_res)
         download_button_img = download_button_img.resize((150,50),Image.ANTIALIAS)
         download_button_img = ImageTk.PhotoImage(download_button_img)
