@@ -1,6 +1,5 @@
 <img src="Image/favicon.png" align="right" />
 
-# TUBY 
 ### Super Fast ⚡ . YouTube ▶️ . Downloader ⬇️  
 #### If you have Doubt in it. Check it Out.
 

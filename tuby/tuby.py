@@ -8,34 +8,33 @@ import webbrowser,os,pyperclip,sys
 
 
 
-file_size = 0    
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-    
-        return os.path.join(base_path, relative_path)
+   
 
-urlClip = pyperclip.paste()
-YouTubeURL = 'https://www.youtube.com/watch?v='
+
 #print(urlClip)
 
 
 class tuby():
     def __init__(self):
-        self.root= Tk(className='Tuby')
+        print("Welcome to Tuby Downloader")
+        print(' _____      _          ')
+        print("|_   _|   _| |__  _   _ ")
+        print("  | || | | | '_ \| | | |")
+        print("  | || |_| | |_) | |_| |")
+        print("  |_| \__,_|_.__/ \__, |")
+        print("                  |___/ ")
+        urlClip = pyperclip.paste()
+        YouTubeURL = 'https://www.youtube.com/watch?v='
+        self.root= Tk(className='Tuby d')
         self.root.geometry('600x350')
-        iconres= resource_path("Image/favicon.png")
+        iconres= self.resource_path("assets/favicon.png")
         icon = PhotoImage(file = iconres)
         self.root.iconphoto(False, icon)
         self.root.title("Tuby an YouTube video dowmloader  (3.5.7)")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root['bg'] = 'black'
         self.root.resizable(0,0)
-        imgres=resource_path("Image/favicon.png")
+        imgres=self.resource_path("assets/favicon.png")
         img  = Image.open(imgres)
         img  = img.resize((80,80),Image.ANTIALIAS)
         img  = ImageTk.PhotoImage(img)
@@ -54,7 +53,7 @@ class tuby():
         self.url.place(x=125,y=125)
         self.check(urlClip,YouTubeURL)
 
-        download_button_img_res = resource_path("Image/download.png")
+        download_button_img_res = self.resource_path("assets/download.png")
         download_button_img = Image.open(download_button_img_res)
         download_button_img = download_button_img.resize((150,50),Image.ANTIALIAS)
         download_button_img = ImageTk.PhotoImage(download_button_img)
@@ -85,7 +84,6 @@ class tuby():
             self.root.destroy()
             os._exit(0)
              
-    
     
     def downThread(self):
         
@@ -133,6 +131,16 @@ class tuby():
                 self.download_status.config(text = 'Failed! There is an error.')
                 self.download_button.config(state=NORMAL)
     
+
+    def resource_path(self,relative_path):
+            """ Get absolute path to resource, works for dev and for PyInstaller """
+            try:
+            # PyInstaller creates a temp folder and stores path in _MEIPASS
+                base_path = sys._MEIPASS
+            except Exception:
+                base_path = os.path.abspath(".")
+                return os.path.join(base_path, relative_path)
+
     def paste(self,event):
         urlClip = pyperclip.paste()
         self.url.insert(0, urlClip)
@@ -144,7 +152,6 @@ class tuby():
     
     def info(self ,*args):
         webbrowser.open("https://gpstudiolaboftech.github.io/")
-        
         
     
     
