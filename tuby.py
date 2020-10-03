@@ -28,14 +28,14 @@ class tuby():
     def __init__(self):
         self.root= Tk(className='Tuby')
         self.root.geometry('600x350')
-        iconres= resource_path("Image/ytlogo.png")
+        iconres= resource_path("Image/favicon.png")
         icon = PhotoImage(file = iconres)
         self.root.iconphoto(False, icon)
         self.root.title("Tuby an YouTube video dowmloader  (3.5.7)")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root['bg'] = 'black'
         self.root.resizable(0,0)
-        imgres=resource_path("Image/ytlogo.png")
+        imgres=resource_path("Image/favicon.png")
         img  = Image.open(imgres)
         img  = img.resize((80,80),Image.ANTIALIAS)
         img  = ImageTk.PhotoImage(img)
