@@ -1,8 +1,10 @@
+<img src="Image/favicon.png" align="right" />
+
 # TUBY 
 ### Super Fast ⚡ . YouTube ▶️ . Downloader ⬇️  
 #### If you have Doubt in it. Check it Out.
 
-Tuby is freeware and Open-Source Software written in python, which can download youtube videos at super fast ⚡. For now there the software is Initial Stage. It may take time to construct my entire Idea.
+Tuby is freeware and Open-Source Software written in python, which can download youtube videos at super fast ⚡. For now the software is in Initial Stage. It may take time to construct my entire Idea.
 ## Features
 - Light-Weight 💨
 - Super FAST 🔥
@@ -11,8 +13,8 @@ Tuby is freeware and Open-Source Software written in python, which can download 
 ___
 ## Installation
 
-\
-c
+
+ -
 _____
 ## Dependency to Run Code
 
