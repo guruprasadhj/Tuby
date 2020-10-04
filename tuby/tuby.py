@@ -23,19 +23,28 @@ class tuby():
         print("  | || |_| | |_) | |_| |")
         print("  |_| \__,_|_.__/ \__, |")
         print("                  |___/ ")
-        urlClip = pyperclip.paste()
+
         YouTubeURL = 'https://www.youtube.com/watch?v='
+
+        #Get Data from clipboard
+        urlClip = pyperclip.paste()
+        
+        srcPath = os.path.dirname(os.path.abspath(__file__))
+        #srcPath = os.getcwd()
+        print(srcPath)
+        
+        
         self.root= Tk(className='Tuby')
         self.root.geometry('600x350')
-        iconres= self.resource_path("tuby/assets/favicon.png")
-        icon = PhotoImage(file = iconres)
+        iconres= self.resource_path("assets/favicon.png")
+        print (iconres)
+        icon = PhotoImage(file = (iconres))
         self.root.iconphoto(False, icon)
         self.root.title("Tuby an YouTube video dowmloader  (3.5.7)")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root['bg'] = 'black'
-        self.root.resizable(0,0)
-        imgres=self.resource_path("tuby/assets/favicon.png")
-        img  = Image.open(imgres)
+        self.root.resizable(0,0)       
+        img  = Image.open(iconres)
         img  = img.resize((80,80),Image.ANTIALIAS)
         img  = ImageTk.PhotoImage(img)
         self.head = Label(self.root,image=img,bg='black',fg='white')
@@ -53,7 +62,8 @@ class tuby():
         self.url.place(x=125,y=125)
         self.check(urlClip,YouTubeURL)
 
-        download_button_img_res = self.resource_path("tuby/assets/download.png")
+        download_button_img_res = self.resource_path(srcPath + "/assets/download.png")
+        print(download_button_img_res + 'Hello World')
         download_button_img = Image.open(download_button_img_res)
         download_button_img = download_button_img.resize((150,50),Image.ANTIALIAS)
         download_button_img = ImageTk.PhotoImage(download_button_img)
@@ -138,7 +148,7 @@ class tuby():
             # PyInstaller creates a temp folder and stores path in _MEIPASS
                 base_path = sys._MEIPASS
             except Exception:
-                base_path = os.path.abspath(".")
+                base_path = os.path.dirname(os.path.abspath(__file__)) #os.path.abspath(".")
                 return os.path.join(base_path, relative_path)
 
     def paste(self,event):
@@ -154,11 +164,16 @@ class tuby():
         webbrowser.open("https://gpstudiolaboftech.github.io/")
         
     
-    
+def main():
+    try:
+        tuby()
+
+    except KeyboardInterrupt:
+        print('You have force stoped the application. (Unexpected Keyboarf Interuption)')
     
 if __name__ == "__main__":
     
-    try:
+    try:    
         tuby()
 
     except KeyboardInterrupt:
