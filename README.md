@@ -14,8 +14,20 @@ Tuby is freeware and Open-Source Software written in python, which can download 
 ___
 ## Installation
 
-
- -
+```
+git clone https://github.com/guruprasadhj/Tuby
+cd Tuby-master
+pip install .
+```
+ ## Run the App 
+ ### GUI :
+ ```
+ tuby-gui  
+ ```
+### CLI :
+```
+tuby-cli
+```
 _____
 ## Dependency to Run Code
 
