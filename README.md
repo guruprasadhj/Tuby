@@ -16,7 +16,7 @@ ___
 
 ```
 git clone https://github.com/guruprasadhj/Tuby
-cd Tuby-master
+cd Tuby
 pip install .
 ```
  ## Run the App 
