@@ -23,6 +23,7 @@ class tuby():
         print("  | || |_| | |_) | |_| |")
         print("  |_| \__,_|_.__/ \__, |")
         print("                  |___/ ")
+        print("Copyright (c) guruprasadh_j")
 
         YouTubeURL = 'https://www.youtube.com/watch?v='
 
