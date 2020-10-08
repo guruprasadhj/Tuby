@@ -1,10 +1,14 @@
-<img src="Image/ytlogo.png" align="right" />
+<img src="Image/favicon.png" align="right" />
 
 ## Tuby
 
 ### Super Fast ⚡ . YouTube ▶️ . Downloader ⬇️  
 #### If you have Doubt in it. Check it Out.
+<<<<<<< HEAD
 ⚠ (The software and documentation is in development stage)\
+=======
+(this readme and software is under construction)\
+>>>>>>> 39301617ce130e9c4316f2f9599ad6f4ad64dc23
 Tuby is freeware and Open-Source Software written in python, which can download youtube videos at super fast ⚡. For now the software is in Initial Stage. It may take time to construct my entire Idea.
 ## Features
 - Light-Weight 💨
