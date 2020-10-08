@@ -1,14 +1,15 @@
+#!/usr/bin/python
 from tkinter import *
 from PIL import Image,ImageTk
 import os,re
-
+from validate import redirect_link
 #beta version and will be added soon
 
 #Move Window
-def move_window(*args):
+def move_window(event):
     root.geometry('+{0}+{1}'.format(event.x_root, event.y_root))
 
-#Cange Page
+#Change Page
 def changepage():
     global page_Num, root,app
     app.pack_forget()
@@ -22,16 +23,7 @@ def changepage():
 
 def validation(event):
     url_link = url.get()
-    regex_video = re.compile(r'^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+',re.IGNORECASE)
-    regex_playlist = re.compile(r'^.*(youtu.be\/|list=)([^#\&\?]*).*')
-    video = (re.match(regex_video, url_link) is not None)
-    playlist = (re.match(regex_playlist, url_link) is not None)
-    if(video == True):
-        print('Offline validation Sucess')
-    elif(video == False and url_link == 'Enter a Url'):
-        print('urls is empty')
-    else:
-        print('type something')
+    redirect_link(url_link)
 
 
 
@@ -101,7 +93,7 @@ def mode_switch():
         add_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
         minus_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
         app.config(bg='#2c2c2c')
-        downloader_text.config(bg='#2c2c2c')
+        downloader_text.config(bg='#2c2c2c',fg='white')
         downloader_label.config(bg='#2c2c2c')
         url_label.config(bg='#2c2c2c')
         Download_label.config(bg='#2c2c2c')
