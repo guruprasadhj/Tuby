@@ -16,6 +16,7 @@ import webbrowser,os,pyperclip,sys
 
 class tuby():
     def __init__(self):
+        global root
         print("Welcome to Tuby Downloader")
         print(' _____      _          ')
         print("|_   _|   _| |__  _   _ ")
@@ -23,7 +24,7 @@ class tuby():
         print("  | || |_| | |_) | |_| |")
         print("  |_| \__,_|_.__/ \__, |")
         print("                  |___/ ")
-        print("Copyright (c) guruprasadh_j")
+        print("Copyright (c) 2020 guruprasadh_j")
 
         YouTubeURL = 'https://www.youtube.com/watch?v='
 
@@ -37,7 +38,7 @@ class tuby():
         
         self.root= Tk(className='Tuby')
         self.root.geometry('600x350')
-        iconres= self.resource_path("assets/favicon.png")
+        iconres= self.resource_path(srcPath+"/assets/favicon.png")
         print (iconres)
         icon = PhotoImage(file = (iconres))
         self.root.iconphoto(False, icon)
@@ -63,13 +64,13 @@ class tuby():
         self.url.place(x=125,y=125)
         self.check(urlClip,YouTubeURL)
 
-        download_button_img_res = self.resource_path(srcPath + "/assets/download.png")
-        print(download_button_img_res + 'Hello World')
-        download_button_img = Image.open(download_button_img_res)
-        download_button_img = download_button_img.resize((150,50),Image.ANTIALIAS)
-        download_button_img = ImageTk.PhotoImage(download_button_img)
-        self.download_button = Button(self.root, width=160,height=45,bg='black',relief='raised',activebackground='red', command = self.downThread)
-        self.download_button.config(image = download_button_img )
+        #download_button_img_res = self.resource_path(srcPath + "/assets/download.png")
+        #print(download_button_img_res + 'Hello World')
+        #download_button_img = Image.open(download_button_img_res)
+        #download_button_img = download_button_img.resize((150,50),Image.ANTIALIAS)
+        #download_button_img = ImageTk.PhotoImage(download_button_img)
+        self.download_button = Button(self.root,text= 'Download',fg='white', bg='red',width = 20,height=2,relief='flat',activebackground='red', command = self.downThread)
+        #self.download_button.config(image = download_button_img ,width=160,height=45,)
         self.download_button.place(x=220,y=200)
         self.download_status = Label(self.root, text = 'Please wait..',font=('verdana bold',15),bg='black',fg='white')
         self.copyright = Label(self.root, text="Gp Studio,\xa9 2020", bg= "red",fg="white"  )
@@ -98,8 +99,8 @@ class tuby():
     
     def downThread(self):
         
-        thread =Thread(target=self.downloader)
-        thread.start()
+        self.thread =Thread(target=self.downloader)
+        self.thread.start()
     
     def progress(self,chunk,file_handle,remaining):
          
@@ -120,7 +121,7 @@ class tuby():
                 video = yt.streams.filter(progressive=True,file_extension='mp4').first()
                 file_size = video.filesize
                 video.download (path)
-                self.download_status.config(text = 'Download Finish...' )
+                tubygui.per.set('Download Finish...' )
                 res = messagebox.askyesno("Youtubr Video Downloader","Do youtube another video ?")
             
                 if res == 1:
@@ -158,7 +159,8 @@ class tuby():
     
     def quit(self,event):
         print ("you pressed control c")
-        #root.destroy()
+        #self.thread.join()
+        #self.root.destroy()
         os._exit(0)
     
     def info(self ,*args):

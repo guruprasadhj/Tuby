@@ -1,5 +1,7 @@
 #!/usr/bin/python
-import re
+import re,requests,time,webbrowser,urllib,tubygui
+from urllib.request import urlopen
+
 def video_validation(url_link):
     regex_video = re.compile(r'^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+',re.IGNORECASE)
     video = (re.match(regex_video, url_link) is not None)
@@ -10,17 +12,49 @@ def playlist_validaton(url_link):
     playlist = (re.match(regex_playlist, url_link) is not None)
     return playlist
 
-def redirect_link(url_link):
+
+
+def check(online_img,offline_img,):
+    try:
+        requests.get('https://www.google.com/').status_code
+        #print('online')
+        return online_img
+        time.sleep(5)
+        check_again(online_img,offline_img)
+    except:
+        
+        #print('offline')
+        return offline_img
+        time.sleep(5)
+        check_again(online_img,offline_img)
+        
+def check_again(online_img,offline_img):
+    try:
+        requests.get('https://www.google.com/').status_code
+        #print('online')
+        time.sleep(5)
+        check(online_img,offline_img)
+    except:
+        #print('offline')
+        time.sleep(5)
+        check(online_img,offline_img)
+
+
+
+def redirect_link(url_link,loading_label):
     video = video_validation(url_link)
     playlist = playlist_validaton(url_link)
     if(video == True):
         if(playlist == True):
             print('Its a playlist')
+
         else:
             print('Offline validation Sucess')
+            tubygui.downThread(url_link,loading_label)
     
-    elif(video == False and url_link == 'Enter a Url'):
+    elif(video == False and url_link == 'Enter a Url')or(len(url_link)==0):
         print('urls is empty')
     
     else:
-        print('type something')
+        webbrowser.open('https://www.youtube.com/results?search_query=' + url_link )
+        #print('type something')
