@@ -103,9 +103,9 @@ class tuby():
         self.thread.start()
     
     def progress(self,chunk,file_handle,remaining):
-         
-        file_downloaded = int(file_size-remaining)
-        per = (file_downloaded/file_size)*100
+        global download_status
+        self.file_downloaded = int(file_size-remaining)
+        per = (self.file_downloaded/file_size)*100
         self.download_status.config(text='{:00.0f} % downloaded'.format(per))
     
     def downloader(self):
@@ -121,7 +121,7 @@ class tuby():
                 video = yt.streams.filter(progressive=True,file_extension='mp4').first()
                 file_size = video.filesize
                 video.download (path)
-                tubygui.per.set('Download Finish...' )
+                self.download_status.config('Download Finish...' )
                 res = messagebox.askyesno("Youtubr Video Downloader","Do youtube another video ?")
             
                 if res == 1:

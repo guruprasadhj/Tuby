@@ -69,7 +69,7 @@ def validation(event):
     global url_link
     OnPressed_Download()
     url_link = url.get()
-    validate.redirect_link(url_link,loading_label)
+    validate.redirect_link(url_link,)
 
 def net_check(*args): 
     global status_text,status
@@ -83,6 +83,7 @@ def net_check(*args):
         off_or_on = StringVar()
         off_or_on.set('online') if status_img==online_img else off_or_on.set('offline') 
         status_text.config(textvariable = off_or_on,)
+
         
 def loading(chunk,file_size,remaining):
     file_downloaded = int(dengine.file_size-remaining)
@@ -91,11 +92,11 @@ def loading(chunk,file_size,remaining):
     print(pers)
         #if per == 100:
 
+
 # multi-tasking with internet connection check and downloading video
 def downThread(url_link,loading_label):
     print('Hello World!!')
-    
-    download_thread = threading.Thread(target=dengine.ytdownloader(url_link,loading_label))
+    download_thread = threading.Thread(target=dengine.ytdownloader(url_link))
     download_thread.start()
 
 def tuby_plus(root):
@@ -192,11 +193,13 @@ def mode_switch():
         Download_label.config(bg='#f3f3f3')
         status_text.config(bg='#f3f3f3',fg='#2c2c2c')
         status.config(bg='#f3f3f3',fg='#2c2c2c')
+        loading_img = ('light-loading.gif')
+        loading_gif = GifLabel(root,srcPath+'/assets/'+loading_img,100)
         btnState = True
 
 
 if __name__ == "__main__":
-    global loading_label,per
+    global loading_label,per,loading_img
 
     print(pyfiglet.figlet_format("Tuby", font = "slant"  ) )
     page_Num = 1
@@ -259,8 +262,8 @@ if __name__ == "__main__":
     download_img = ImageTk.PhotoImage(download_img)
 
     tuby(root)
-    
-    loading_gif = GifLabel(root,srcPath+'/assets/ezgif.com-crop.gif',100)
+    loading_img = ('light-loading.gif')
+    loading_gif = GifLabel(root,srcPath+'/assets/'+loading_img,100)
     
     per = StringVar()
     per.set('Please wait...')
