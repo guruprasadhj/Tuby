@@ -15,6 +15,7 @@ ___
 ## Installation
 
 ```
+pip3 install wheel
 git clone https://github.com/guruprasadhj/Tuby
 cd Tuby
 pip install .

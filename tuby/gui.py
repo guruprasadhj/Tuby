@@ -3,8 +3,12 @@ from tkinter import *
 from tkinter import filedialog,messagebox
 from pytube import YouTube
 from PIL import Image,ImageTk
-import validate,threading,pyperclip
+import threading,pyperclip
 import multiprocessing
+try:
+    import validate
+except:
+    import tuby.validate
 #from dengine import ytdownloader
 #import dengine
 
@@ -232,8 +236,10 @@ class ui():
         #p1.join()
         #self.OnPressed_Download()
         self.url_link = self.url.get()
-        
-        validation = validate.offline_check(self.url_link)
+        try:
+            validation = validate.offline_check(self.url_link)
+        except NameError:
+            validation = tuby.validate.offline_check(self.url_link)
         if (validation == ('ytvideo')):
             #self.downThread()
             self.download_thread = threading.Thread(target=self.downloader)
@@ -248,7 +254,10 @@ class ui():
         self.status = Label(self.app,bg='#2c2c2c')
         self.status.place(x=10,y=270)
         while True:
-            self.status_img = validate.check(self.online_img,self.offline_img)
+            try:
+                self.status_img = validate.check(self.online_img,self.offline_img)
+            except NameError:
+                self.status_img = tuby.validate.check(self.online_img,self.offline_img)
             self.status.config(image = self.status_img)
             self.off_or_on = StringVar()
             self.off_or_on.set('online') if self.status_img==self.online_img else self.off_or_on.set('offline') 
@@ -264,13 +273,13 @@ class ui():
         #self.download_thread.join()
     
     def progress(self,chunk,file_handle,remaining):
-        global loading_label
+        
         self.file_downloaded = int(file_size-remaining)
         per = (self.file_downloaded/file_size)*100
         self.loading_label.config(text='{:00.0f} % downloaded'.format(per))
 
     def downloader(self):
-        global file_size,loading_label
+        global file_size
         #self.download_button.config(state=DISABLED)
         self.loading_label.pack(side="bottom",fill=X) #.place(x=230,y=250)
         #self.app.pack_forget()
@@ -306,8 +315,10 @@ class ui():
         
     def clear_entry(self,*args):
         urlClip = pyperclip.paste()
-        
-        validation = validate.offline_check(urlClip)
+        try:
+            validation = validate.offline_check(urlClip)
+        except:
+            validation = tuby.validate.offline_check(urlClip)
         if(validation == ('ytvideo')):
             self.url.delete(0, END)
             self.url.insert(0, urlClip)
@@ -331,7 +342,7 @@ class ui():
 
     def on_closing(self,*arg):
         #if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        self.root.destroy()
+        #self.root.destroy()
         os._exit(0)
 
 if __name__ == "__main__":

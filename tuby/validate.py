@@ -61,5 +61,5 @@ def offline_check(url_link):
     else:
         #webbrowser.open('https://www.youtube.com/results?search_query=' + url_link )
         #print('type something')
-        link = ('empty')
+        link = ('this not an url')
         return link
