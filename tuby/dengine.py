@@ -22,3 +22,8 @@ def ytdownloader(url_link):
                 
                 
     
+def progress(self,chunk,file_handle,remaining):
+
+        file_downloaded = int(file_size-remaining)
+        per = str((file_downloaded/file_size)*100
+        #loading_label.config(text='{:00.0f} % downloaded'.format(per))

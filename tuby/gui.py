@@ -1,10 +1,12 @@
 import pyfiglet,os
 from tkinter import *
+from tkinter import filedialog,messagebox
 from pytube import YouTube
 from PIL import Image,ImageTk
 import validate,threading,pyperclip
+import multiprocessing
 #from dengine import ytdownloader
-import dengine
+#import dengine
 
 file_size = 0
 class GifLabel(Label):       #only gif player 
@@ -49,8 +51,9 @@ class GifLabel(Label):       #only gif player
 
 class ui():
     def __init__(self):
-       
+        print("Welcome to Tuby Downloader")
         print(pyfiglet.figlet_format("Tuby", font = "slant"  ) )
+        print("Copyright (c) 2020 guruprasadh_j")
         self.page_Num = 1
         self.srcPath = os.path.dirname(os.path.abspath(__file__))
         self.root = Tk()
@@ -116,7 +119,7 @@ class ui():
 
         self.per = StringVar()
         self.per.set('Please wait...')
-        self.loading_label= Label(self.root,textvariable = self.per,bg='white',fg='black') 
+        self.loading_label= Label(self.root,textVar,bg='white',fg='black') 
 
         self.copyright = Label(self.root, text="Cup ,\xa9 2020", bg= "red",fg="white"  )
         self.copyright.pack(side="bottom",fill=X)
@@ -125,7 +128,7 @@ class ui():
         self.root.mainloop()
 
     def tuby(self,root):
-        global app,url_img,url_label,Download_label,downloader_label,download_text,downloader_text,url,thread
+        
 
         self.app = Frame(root,bg='#2c2c2c')
         self.app.pack(fill='both', expand=True)
@@ -137,8 +140,10 @@ class ui():
         self.downloader_label.place(x=15,y=25)
 
         #Internet Check
-        thread = threading.Thread(target= self.net_check)
-        thread.start()
+        #thread = threading.Thread(target= self.net_check)
+        #thread.start()
+        multiproces = multiprocessing.Process(target=self.net_check)
+        multiproces.start()
 
         self.url_label = Label(self.app,image = self.url_img,bg='#2c2c2c')
         self.url_label.place(x=30,y=140)
@@ -166,7 +171,7 @@ class ui():
     def mode_switch(self):
         #global btnState
 
-        if self.btnState: #Dark Mode
+        if self.btnState == True: #Dark Mode
             self.mode.config(image=self.dark_img, bg='#202020',activebackground='#090909',bd=0,highlightcolor="#202020", highlightbackground="#202020",)
             self.root['bg'] = ('#202020')
             self.title_bar.config(bg='#212121')
@@ -184,7 +189,7 @@ class ui():
             self.loading_gif = GifLabel(self.root,self.srcPath+'/assets/'+self.loading_img,100)
             self.btnState = False
 
-        else: #Light Mode
+        else : #Light Mode
             self.mode.config(image=self.light_img,bg='#cccccc',activebackground='#cccccc',bd=0,highlightcolor="#cccccc", highlightbackground="#cccccc", )
             self.root['bg']=('white')
             self.title_bar.config(bg='#cccccc')
@@ -201,12 +206,13 @@ class ui():
             self.loading_img = ('light-loading.gif')
             self.loading_gif = GifLabel(self.root,self.srcPath+'/assets/'+self.loading_img,100)
             self.btnState = True
+
     #Move Window
     def move_window(self,event):
         self.root.geometry('+{0}+{1}'.format(event.x_root, event.y_root))
 
     def changepage(self):
-        global page_Num, root,app
+        
         self.app.pack_forget()
         if self.page_Num == 1:
             self.tuby_plus(self.root)
@@ -220,17 +226,20 @@ class ui():
         #self.animation = threading.Thread(target=self.OnPressed_Download)
         #self.animation.start()
         #self.animation.join()
-        self.OnPressed_Download()
+        #p1 = multiprocessing.Process(target=self.OnPressed_Download) 
+        #p1.start()
+        #p1.join()
+        #self.OnPressed_Download()
         self.url_link = self.url.get()
         
         validation = validate.offline_check(self.url_link)
         if (validation == ('ytvideo')):
-            self.downThread(self.url_link)
+            self.downThread()
         elif(validation == ('ytplaylist')):
             print("It's a playlist")
 
     def net_check(self,*args): 
-        global status_text,status
+        
         self.status_text = Label(self.app, font = ('Courier 15 bold'),bg='#2c2c2c',fg='white')
         self.status_text.place(x = 27,y=267)
         self.status = Label(self.app,bg='#2c2c2c')
@@ -242,18 +251,54 @@ class ui():
             self.off_or_on.set('online') if self.status_img==self.online_img else self.off_or_on.set('offline') 
             self.status_text.config(textvariable = self.off_or_on,)
 
-    def downThread(self,url_link):
+    def downThread(self):
         print('Hello World!!')
-        self.download_thread = threading.Thread(target=dengine.ytdownloader(url_link))
+        #p2 = multiprocessing.Process(target=self.downloader) 
+        #p2.start()
+        #p2.join()
+        self.download_thread = threading.Thread(target=self.downloader())
         self.download_thread.start()
-        self.download_thread.join()
+        #self.download_thread.join()
     
-    def loading(self,chunk,file_handle,remaining):
-        file_downloaded = int(file_size-remaining)
-        pers = str((file_downloaded/file_size)*100)
-        self.per.set(pers)
-        print(pers)
-    
+    def progress(self,chunk,file_handle,remaining):
+        self.file_downloaded = int(file_size-remaining)
+        per = (self.file_downloaded/self.file_size)*100
+        self.loading_label.config(text='{:00.0f} % downloaded'.format(per))
+
+    def downloader(self):
+        
+        #self.download_button.config(state=DISABLED)
+        self.loading_label.pack(side="bottom",fill=X) #.place(x=230,y=250)
+        #self.app.pack_forget()
+        #self.loading_gif.place(x=180,y=50)
+        try:
+            url1 = self.url.get()
+            path = filedialog.askdirectory()
+            yt   = YouTube(url1,on_progress_callback=self.progress)
+            if os.path.isdir(path):
+                video = yt.streams.filter(progressive=True,file_extension='mp4').first()
+                self.file_size = video.filesize
+                video.download (path)
+                self.loading_label.config('Download Finish...' )
+                res = messagebox.askyesno("YouTube Video Downloader","Do youtube another video ?")
+                if res == 1:
+                    self.loading_label.config(text = 'Restarted' )
+                    self.url.delete(0,END)
+                    #self.download_button.config(state= NORMAL)
+                    
+                else:
+                    self.root.destroy()
+            else:
+                messagebox.showerror("error","no directory exist")
+        except Exception as e :
+            print(e)
+            if(self.url.get()== ''):
+                self.loading_label.config(text = 'Enter The URL')
+                #self.download_button.config(state=NORMAL)
+            else:
+                self.loading_label.config(text = 'Failed! There is an error.')
+                #elf.download_button.config(state=NORMAL)
+        
     def clear_entry(self,*args):
         urlClip = pyperclip.paste()
         
@@ -265,10 +310,10 @@ class ui():
             self.url.delete(0, END)
 
     def OnPressed_Download(self,*args):
-        print('OnPressed_Download')
+        #print('OnPressed_Download')
         self.app.pack_forget()
         self.loading_gif.place(x=180,y=50)
-        self.loading_label.pack(side="bottom",fill=X)
+        
 
     def OnHover_Download(self,*args):
         #print('OnHover_Download')
