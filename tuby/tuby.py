@@ -1,7 +1,11 @@
-import PIL._tkinter_finder
+
 from tkinter import*
 from tkinter import filedialog,messagebox
-from PIL import Image,ImageTk
+try:
+   from PIL import Image,ImageTk
+   import PIL._tkinter_finder
+except ImportError:
+   print('module not found')   
 from pytube import YouTube
 from threading import *
 import webbrowser,os,pyperclip,sys
