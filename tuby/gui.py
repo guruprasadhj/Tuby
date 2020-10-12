@@ -54,6 +54,7 @@ class ui():
         print("Welcome to Tuby Downloader")
         print(pyfiglet.figlet_format("Tuby", font = "slant"  ) )
         print("Copyright (c) 2020 guruprasadh_j")
+        
         self.page_Num = 1
         self.srcPath = os.path.dirname(os.path.abspath(__file__))
         self.root = Tk()
@@ -119,8 +120,8 @@ class ui():
 
         self.per = StringVar()
         self.per.set('Please wait...')
-        self.loading_label= Label(self.root,textVar,bg='white',fg='black') 
-
+        #self.loading_label= Label(self.root,textvariable = self.per,bg='white',fg='black') 
+        self.loading_label= Label(self.root,text='please wait..',bg='white',fg='black') 
         self.copyright = Label(self.root, text="Cup ,\xa9 2020", bg= "red",fg="white"  )
         self.copyright.pack(side="bottom",fill=X)
 
@@ -132,7 +133,8 @@ class ui():
 
         self.app = Frame(root,bg='#2c2c2c')
         self.app.pack(fill='both', expand=True)
-
+        #multiproces = multiprocessing.Process(target=self.net_check)
+        #multiproces.start()
         self.downloader_text = Label(self.app,text = 'uby Downloader',font=('Calibri',15,'bold'),bg='#2c2c2c',fg='white')
         self.downloader_text.place(x=65,y=45)
 
@@ -140,10 +142,9 @@ class ui():
         self.downloader_label.place(x=15,y=25)
 
         #Internet Check
-        #thread = threading.Thread(target= self.net_check)
-        #thread.start()
-        multiproces = multiprocessing.Process(target=self.net_check)
-        multiproces.start()
+        thread = threading.Thread(target= self.net_check)
+        thread.start()
+        
 
         self.url_label = Label(self.app,image = self.url_img,bg='#2c2c2c')
         self.url_label.place(x=30,y=140)
@@ -234,7 +235,9 @@ class ui():
         
         validation = validate.offline_check(self.url_link)
         if (validation == ('ytvideo')):
-            self.downThread()
+            #self.downThread()
+            self.download_thread = threading.Thread(target=self.downloader)
+            self.download_thread.start()
         elif(validation == ('ytplaylist')):
             print("It's a playlist")
 
@@ -256,17 +259,18 @@ class ui():
         #p2 = multiprocessing.Process(target=self.downloader) 
         #p2.start()
         #p2.join()
-        self.download_thread = threading.Thread(target=self.downloader())
+        self.download_thread = threading.Thread(target=self.downloader)
         self.download_thread.start()
         #self.download_thread.join()
     
     def progress(self,chunk,file_handle,remaining):
+        global loading_label
         self.file_downloaded = int(file_size-remaining)
-        per = (self.file_downloaded/self.file_size)*100
+        per = (self.file_downloaded/file_size)*100
         self.loading_label.config(text='{:00.0f} % downloaded'.format(per))
 
     def downloader(self):
-        
+        global file_size,loading_label
         #self.download_button.config(state=DISABLED)
         self.loading_label.pack(side="bottom",fill=X) #.place(x=230,y=250)
         #self.app.pack_forget()
@@ -277,9 +281,10 @@ class ui():
             yt   = YouTube(url1,on_progress_callback=self.progress)
             if os.path.isdir(path):
                 video = yt.streams.filter(progressive=True,file_extension='mp4').first()
-                self.file_size = video.filesize
+                file_size = video.filesize
                 video.download (path)
-                self.loading_label.config('Download Finish...' )
+                self.loading_label.config(text='Download Finish...' )
+                self.loading_label.pack_forget()
                 res = messagebox.askyesno("YouTube Video Downloader","Do youtube another video ?")
                 if res == 1:
                     self.loading_label.config(text = 'Restarted' )
@@ -287,7 +292,7 @@ class ui():
                     #self.download_button.config(state= NORMAL)
                     
                 else:
-                    self.root.destroy()
+                    self.on_closing()
             else:
                 messagebox.showerror("error","no directory exist")
         except Exception as e :
@@ -330,4 +335,7 @@ class ui():
         os._exit(0)
 
 if __name__ == "__main__":
-    ui()
+    try:
+        ui()
+    except Exception as e:
+        print(e)
