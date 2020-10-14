@@ -1,16 +1,20 @@
-import pyfiglet,os
-from tkinter import *
-from tkinter import filedialog,messagebox
-from pytube import YouTube
-from PIL import Image,ImageTk
-import threading,pyperclip
 import multiprocessing
+import os
+import threading
+from tkinter import *
+from tkinter import filedialog, messagebox
+from turtle import *
+import pyfiglet
+import pyperclip
+from PIL import Image, ImageTk
+from pytube import YouTube
+
 try:
-    import validate
-except:
+    print('hello')
     import tuby.validate
-#from dengine import ytdownloader
-#import dengine
+    
+except ModuleNotFoundError:
+    import validate
 
 file_size = 0
 class GifLabel(Label):       #only gif player 
@@ -125,10 +129,12 @@ class ui():
         self.per = StringVar()
         self.per.set('Please wait...')
         #self.loading_label= Label(self.root,textvariable = self.per,bg='white',fg='black') 
-        self.loading_label= Label(self.root,text='please wait..',bg='white',fg='black') 
+        self.loading_label= Label(self.root,text='please wait..',bg='black',fg='white') 
         self.copyright = Label(self.root, text="Cup ,\xa9 2020", bg= "red",fg="white"  )
         self.copyright.pack(side="bottom",fill=X)
-
+        
+        loaderThread = threading.Thread(target=self.loader)
+        loaderThread.start()
 
         self.root.mainloop()
 
@@ -170,8 +176,10 @@ class ui():
         self.download_text.bind('<Enter>', self.OnHover_Download)
 
     def tuby_plus(self,root):
+        self.under__construction
         self.app = Frame(self.root,bg='#2c2c2c')
         self.app.pack()
+        Label(self.app, text = 'This feature will Introduced as soon as possible',font=('Helvetica',20,'bold','italic')).place(relx=0.5, rely=0.48, anchor=CENTER)#.pack(anchor=CENTER, fill=X, expand=YES)
 
     def mode_switch(self):
         #global btnState
@@ -265,24 +273,30 @@ class ui():
 
     def downThread(self):
         print('Hello World!!')
-        #p2 = multiprocessing.Process(target=self.downloader) 
-        #p2.start()
-        #p2.join()
         self.download_thread = threading.Thread(target=self.downloader)
         self.download_thread.start()
         #self.download_thread.join()
+        #p2 = multiprocessing.Process(target=self.downloader) 
+        #p2.start()
+        #p2.join()
     
     def progress(self,chunk,file_handle,remaining):
         
         self.file_downloaded = int(file_size-remaining)
         per = (self.file_downloaded/file_size)*100
-        self.loading_label.config(text='{:00.0f} % downloaded'.format(per))
+        self.loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
 
     def downloader(self):
         global file_size
         #self.download_button.config(state=DISABLED)
-        self.loading_label.pack(side="bottom",fill=X) #.place(x=230,y=250)
-        #self.app.pack_forget()
+        
+        canvas.place(relx=0.5, rely=0.48, anchor=CENTER)#x=250,y=150)
+        #canvas.config(anchor= CENTER)
+        #canvas.pack(anchor=W, fill=X, expand=YES)
+        self.loading_label.config(anchor = CENTER)
+        self.loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
+        #self.loading_label.pack(side=TOP, anchor=W, fill=X, expand=YES) #.place(x=230,y=250)
+        self.app.pack_forget()
         #self.loading_gif.place(x=180,y=50)
         try:
             url1 = self.url.get()
@@ -324,6 +338,23 @@ class ui():
             self.url.insert(0, urlClip)
         else:
             self.url.delete(0, END)
+    def loader(self,*args):
+        global canvas
+        canvas = Canvas(self.root,width=100,height = 90,background="black",highlightthickness=1, highlightbackground="black")
+        #canvas.place(x=230,y=130)
+        p = TurtleScreen(canvas)
+        p.bgcolor('black')
+        t = RawTurtle(p)
+        t.speed(10)
+        #t.title("Loader")
+        #t.bgcolor("black")
+        colors = ('red','grey')
+
+        for a in range(360):
+            t.pencolor(colors[a%2]) 
+            t.pensize(5)
+            t.circle(20)
+            t.hideturtle()
 
     def OnPressed_Download(self,*args):
         #print('OnPressed_Download')
@@ -344,7 +375,8 @@ class ui():
         #if messagebox.askokcancel("Quit", "Do you want to quit?"):
         #self.root.destroy()
         os._exit(0)
-
+    def under__construction(self,*args):
+        print('This feature is under construction')
 if __name__ == "__main__":
     try:
         ui()

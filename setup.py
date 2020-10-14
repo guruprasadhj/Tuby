@@ -9,7 +9,7 @@ except Exception as e:
 #long_description = (here / 'README.md').read_text(encoding='utf-8')
 setup(
     name = "Tuby",
-    version = "3.5.8",
+    version = "4.5.0",
     author = "Guru Prasadh J.",
     author_email = "guruprasadh_j@outlook.com",
     description = "Super Fast YouTube Downloader ",
@@ -18,8 +18,8 @@ setup(
     packages=find_packages(),
     entry_points = {
         'console_scripts' : [
-            #'tuby-gui  = tuby.gui:ui',
-            'tuby-gui  = tuby.tuby:tuby',
+            'tuby-gui  = tuby.gui:ui',
+            #'tuby-gui  = tuby.tuby:tuby',
             'tuby-cli  = tuby.cli:main'
             ]},
     package_data={'': ['assets/*']},

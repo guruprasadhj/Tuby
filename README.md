@@ -15,9 +15,9 @@ ___
 ## Installation
 
 ```
-pip3 install wheel
 git clone https://github.com/guruprasadhj/Tuby
 cd Tuby
+pip install requirements.txt
 pip install .
 ```
  ## Run the App 
