@@ -4,8 +4,10 @@ import threading
 from tkinter import *
 from tkinter import filedialog, messagebox
 from turtle import *
+
 import pyfiglet
 import pyperclip
+import requests
 from PIL import Image, ImageTk
 from pytube import YouTube
 
@@ -114,6 +116,10 @@ class ui():
         self.downloader_img = self.downloader_img.resize((50,50),Image.ANTIALIAS)
         self.downloader_img = ImageTk.PhotoImage(self.downloader_img)
 
+        self.fb_downloader_img = Image.open(self.srcPath + '/assets/fb_downloader.png')
+        self.fb_downloader_img = self.fb_downloader_img.resize((50,50),Image.ANTIALIAS)
+        self.fb_downloader_img = ImageTk.PhotoImage(self.fb_downloader_img)
+
         self.url_img  = Image.open(self.srcPath + '/assets/url.png')
         self.url_img  = self.url_img.resize((30,30),Image.ANTIALIAS)
         self.url_img  = ImageTk.PhotoImage(self.url_img)
@@ -121,6 +127,10 @@ class ui():
         self.download_img = Image.open(self.srcPath + '/assets/download.png')
         self.download_img = self.download_img.resize((260,100),Image.ANTIALIAS)
         self.download_img = ImageTk.PhotoImage(self.download_img)
+
+        self.fb_download_img = Image.open(self.srcPath + '/assets/fb_download.png')
+        self.fb_download_img = self.fb_download_img.resize((260,100),Image.ANTIALIAS)
+        self.fb_download_img = ImageTk.PhotoImage(self.fb_download_img)
 
         self.tuby(self.root)
         self.loading_img = ('dark-loading.gif')
@@ -235,14 +245,7 @@ class ui():
             self.page_Num = 1
     
     def validation(self,event):
-        #global url_link
-        #self.animation = threading.Thread(target=self.OnPressed_Download)
-        #self.animation.start()
-        #self.animation.join()
-        #p1 = multiprocessing.Process(target=self.OnPressed_Download) 
-        #p1.start()
-        #p1.join()
-        #self.OnPressed_Download()
+        
         self.url_link = self.url.get()
         try:
             validation = validate.offline_check(self.url_link)
@@ -250,10 +253,13 @@ class ui():
             validation = tuby.validate.offline_check(self.url_link)
         if (validation == ('ytvideo')):
             #self.downThread()
-            self.download_thread = threading.Thread(target=self.downloader)
+            self.download_thread = threading.Thread(target=self.yt_downloader)
             self.download_thread.start()
         elif(validation == ('ytplaylist')):
             print("It's a playlist")
+        elif(validation == ('fbvideo')):
+            self.copyright.config(bg = '3b5998')
+            
 
     def net_check(self,*args): 
         
@@ -273,12 +279,9 @@ class ui():
 
     def downThread(self):
         print('Hello World!!')
-        self.download_thread = threading.Thread(target=self.downloader)
+        self.download_thread = threading.Thread(target=self.yt_downloader)
         self.download_thread.start()
-        #self.download_thread.join()
-        #p2 = multiprocessing.Process(target=self.downloader) 
-        #p2.start()
-        #p2.join()
+        
     
     def progress(self,chunk,file_handle,remaining):
         
@@ -286,7 +289,24 @@ class ui():
         per = (self.file_downloaded/file_size)*100
         self.loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
 
-    def downloader(self):
+
+    def fb_download_video(self,html,quality):
+        """Download the video in HD or SD quality"""
+        print(f"\nDownloading the video in {quality} quality... \n")
+        video_url = re.search(rf'{quality.lower()}_src:"(.+?)"', html).group(1)
+        file_size_request = requests.get(video_url, stream=True)
+        file_size = int(file_size_request.headers['Content-Length'])
+        block_size = 1024
+        #filename = datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')
+        #t = tqdm(total=file_size, unit='B', unit_scale=True, desc=filename, ascii=True)
+        #with open(filename + '.mp4', 'wb') as f:
+        #    for data in file_size_request.iter_content(block_size):
+        #        t.update(len(data))
+        #        f.write(data)
+        #t.close()
+        print("\nVideo downloaded successfully.")
+
+    def yt_downloader(self):
         global file_size
         #self.download_button.config(state=DISABLED)
         
@@ -336,6 +356,13 @@ class ui():
         if(validation == ('ytvideo')):
             self.url.delete(0, END)
             self.url.insert(0, urlClip)
+        elif(validation == 'fbvideo'):
+            self.url.delete(0, END)
+            self.url.insert(0, urlClip)
+            self.download_text.config(bg='#3b5998')
+            self.downloader_label.config(image=self.fb_downloader_img)
+            self.Download_label.config(image=self.fb_download_img)
+            self.copyright.config(bg = '#3b5998')
         else:
             self.url.delete(0, END)
     def loader(self,*args):

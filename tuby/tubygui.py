@@ -17,7 +17,7 @@ class GifLabel(Label):       #only gif player
         except EOFError: 
             pass # we're done 
  
-        try: 
+        try:    
             self.delay = frame #gif_image.info['duration']
         except KeyError:
             self.delay = 100
@@ -69,7 +69,7 @@ def validation(event):
     global url_link
     OnPressed_Download()
     url_link = url.get()
-    validate.redirect_link(url_link,)
+    validate.redirect_link(url_link)
 
 def net_check(*args): 
     global status_text,status
