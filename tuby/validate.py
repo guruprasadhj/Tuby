@@ -1,12 +1,16 @@
 #!/usr/bin/python
 import re
+print(" [   OK   ] - Started regex module successfully imported in validate \n  ")
 import time
+print(" [   OK   ] - Started time module successfully imported in validate \n  ")
 import urllib
+print(" [   OK   ] - Started urllib module successfully imported in validate \n ")
 import webbrowser
+print(" [   OK   ] - Started webbrowser module successfully imported in validate \n ")
 from urllib.request import urlopen
-
+print(" [   OK   ] - Started urllib module successfully imported in validate \n ")
 import requests
-
+print(" [   OK   ] - Started requests module successfully imported in validate \n ")
 
 def video_validation(url_link):
     regex_yt_video = re.compile(r'^(http(s)??\:\/\/)?(www\.)?((youtube\.com\/watch\?v=)|(youtu.be\/))([a-zA-Z0-9\-_])+',re.IGNORECASE)
@@ -27,6 +31,7 @@ def twit_video_validation(url_link):
     regex_tw_video = re.compile(r'https:\/\/twitter.com\/\w{1,15}\/status\/(\d{15,25})',re.IGNORECASE)
     tw_video = (re.match(regex_tw_video, url_link) is not None)
     return tw_video
+
 
 def check(online_img,offline_img,):
     try:
@@ -79,6 +84,7 @@ def offline_check(url_link):
     elif (tw_video == True):
         print('Its a twitter video')
         link = ('twvideo')
+        
         return link
 
     elif(video == False and url_link == 'Enter a Url')or(len(url_link)==0):
@@ -89,3 +95,20 @@ def offline_check(url_link):
         #print('type something')
         link = ('this not an url')
         return link
+
+
+def fb_get_data(url_link):
+    html = requests.get(url_link).content.decode('utf-8')
+
+    _qualityhd = re.search('hd_src:"https',html)
+    _qualitysd = re.search('sd_src:"https', html)
+    _hd = re.search('hd_src:null', html)
+    _sd = re.search('sd_src:null', html)
+    lists = []
+    _thelist = [_qualityhd, _qualitysd, _hd, _sd]
+    print(_thelist)
+    for id,val in enumerate(_thelist):
+        if val != None:
+            lists.append(id)
+            print(lists) 
+    return lists

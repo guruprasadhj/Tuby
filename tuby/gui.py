@@ -1,411 +1,537 @@
-import multiprocessing
+module_error = False
+import time
+start_time = time.time()
 import os
+print(" [   OK   ] - Started OS module successfully imported \n  ")
+import sys
+print(" [   OK   ] - Started SYS module successfully imported \n  ")
 import threading
+print(" [   OK   ] - Started threading module successfully imported \n  ")
+import tkinter.ttk
+print(" [   OK   ] - Started tkinter.ttk module successfully imported \n  ")
+import webbrowser
+print(" [   OK   ] - Started webbrowser module successfully imported \n  ")
+from datetime import datetime
+print(" [   OK   ] - Started datetime module successfully imported \n  ")
 from tkinter import *
 from tkinter import filedialog, messagebox
+print(" [   OK   ] - Started tkinter module successfully imported \n  ")
 from turtle import *
+print(" [   OK   ] - Started turtle module successfully imported \n  ")
 
-import pyfiglet
-import pyperclip
-import requests
-from PIL import Image, ImageTk
-from pytube import YouTube
+print("Inbuilt Module imported Successfully ")
+try:
+    import pyperclip
+except ModuleNotFoundError:
+    print(" [ Error! ] - pyperclip module is not Installed ")
 
 try:
-    print('hello')
+    import requests
+    print(" [   OK   ] - Started request module successfully imported \n   ")
+except ModuleNotFoundError:
+    print(" [ Error! ] - request module is not Installed ")
+
+try:
+    from PIL import Image, ImageTk
+    print(" [   OK   ] - Started pillow module successfully imported \n  ")
+except ModuleNotFoundError:
+    print(" [ Error! ] - pillow module is not Installed ")
+
+try:
+    from pytube import YouTube
+    print(" [   OK   ] - Started pytube module successfully imported \n  ")
+except ModuleNotFoundError:
+    print(" [ Error! ] - pytube module is not Installed ")
+
+try:
+    from tqdm import tqdm
+    print(" [   OK   ] - Started tqdm module successfully imported \n  ")
+
+except ModuleNotFoundError:
+    print(" [ Error! ] - tqdm is not Installed ")
+
+
+try:
     import tuby.validate
     
 except ModuleNotFoundError:
     import validate
 
-file_size = 0
-class GifLabel(Label):       #only gif player 
-    global GifLabel 
-    def __init__(self, master, filename,frame): 
-        gif_image = Image.open(filename) 
-        seq = [] 
-        try: 
-            while 1: 
-                seq.append(gif_image.copy()) 
-                gif_image.seek(len(seq)) # skip to next frame 
-        except EOFError: 
-            pass # we're done 
- 
-        try: 
-            self.delay = frame #gif_image.info['duration']
-        except KeyError:
-            self.delay = 100
-
-        first = seq[0].convert('RGBA')
-        self.frames = [ImageTk.PhotoImage(first)] 
-
-        Label.__init__(self, master, image=self.frames[0],bg='#000000',border=0) 
-
-        temp = seq[0] 
-        for image in seq[1:]: 
-            temp.paste(image) 
-            frame = temp.convert('RGBA') 
-            self.frames.append(ImageTk.PhotoImage(frame)) 
- 
-        self.idx = 0 
- 
-        self.cancel = self.after(self.delay, self.play) 
- 
-    def play(self): 
-        self.config(image=self.frames[self.idx]) 
-        self.idx += 1 
-        if self.idx == len(self.frames): 
-            self.idx = 0 
-        self.cancel = self.after(self.delay, self.play)
-
-
-class ui():
-    def __init__(self):
-        print("Welcome to Tuby Downloader")
-        print(pyfiglet.figlet_format("Tuby", font = "slant"  ) )
-        print("Copyright (c) 2020 guruprasadh_j")
-        
-        self.page_Num = 1
-        self.srcPath = os.path.dirname(os.path.abspath(__file__))
-        self.root = Tk()
-        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
-        #root.overrideredirect(True)
-        #root.wm_attributes('-type', 'splash')
-        #root.update_idletasks()
-        self.root['bg'] = ('black') #202020
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
-        x_coordinate = (screen_width/2) - (600/2)
-        y_coordinate = (screen_height/2) - (350/2)
-        self.root.geometry("{}x{}+{}+{}".format(600, 350, int(x_coordinate), int(y_coordinate)))
-
-        #Title Bar
-        self.title_bar = Frame(self.root, bg='#212121', relief='raised', bd=0, height=20, width=600)
-        self.close_button = Button(self.title_bar ,text='X', command=self.on_closing,   width=1, bg="#090909", fg="#888",activebackground='#ff453a',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
-        self.add_button   = Button(self.title_bar ,text='+', command=self.changepage,   width=1, bg="#090909", fg="#888",activebackground='#ff9f0a',activeforeground='black', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
-        self.minus_button = Button(self.title_bar ,text='_', command=self.root.destroy, width=1, bg="#090909", fg="#888",activebackground='#32d74b',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
-
-
-        self.btnState  = False 
-        self.dark_img  = Image.open(self.srcPath + '/assets/dark-mode.png')
-        self.dark_img  = self.dark_img.resize((37,20),Image.ANTIALIAS)
-        self.dark_img  = ImageTk.PhotoImage(self.dark_img)
-
-        self.light_img = Image.open(self.srcPath + '/assets/light-mode.png')
-        self.light_img = self.light_img.resize((37,20),Image.ANTIALIAS)
-        self.light_img = ImageTk.PhotoImage(self.light_img)
-
-        self.mode = Button(self.title_bar,image= self.dark_img,command=self.mode_switch,bg='#202020',activebackground='#090909',bd=0,highlightcolor="#202020", highlightbackground="#202020",)
-        self.mode.pack(side='left')
-
-        self.title_bar.pack(side='top', fill=X)
-        self.close_button.pack(side='right')
-        self.add_button.pack(side='right')
-        self.minus_button.pack(side='right')
-        self.title_bar.bind('<B1-Motion>', self.move_window)
-
-        self.offline_img = Image.open(self.srcPath + '/assets/red.png')
-        self.offline_img = self.offline_img.resize((10,10),Image.ANTIALIAS)
-        self.offline_img = ImageTk.PhotoImage(self.offline_img)
-
-        self.online_img = Image.open(self.srcPath + '/assets/green.png')
-        self.online_img = self.online_img.resize((10,10),Image.ANTIALIAS)
-        self.online_img = ImageTk.PhotoImage(self.online_img)
-
-        self.downloader_img = Image.open(self.srcPath + '/assets/downloader.png')
-        self.downloader_img = self.downloader_img.resize((50,50),Image.ANTIALIAS)
-        self.downloader_img = ImageTk.PhotoImage(self.downloader_img)
-
-        self.fb_downloader_img = Image.open(self.srcPath + '/assets/fb_downloader.png')
-        self.fb_downloader_img = self.fb_downloader_img.resize((50,50),Image.ANTIALIAS)
-        self.fb_downloader_img = ImageTk.PhotoImage(self.fb_downloader_img)
-
-        self.url_img  = Image.open(self.srcPath + '/assets/url.png')
-        self.url_img  = self.url_img.resize((30,30),Image.ANTIALIAS)
-        self.url_img  = ImageTk.PhotoImage(self.url_img)
-
-        self.download_img = Image.open(self.srcPath + '/assets/download.png')
-        self.download_img = self.download_img.resize((260,100),Image.ANTIALIAS)
-        self.download_img = ImageTk.PhotoImage(self.download_img)
-
-        self.fb_download_img = Image.open(self.srcPath + '/assets/fb_download.png')
-        self.fb_download_img = self.fb_download_img.resize((260,100),Image.ANTIALIAS)
-        self.fb_download_img = ImageTk.PhotoImage(self.fb_download_img)
-
-        self.tuby(self.root)
-        self.loading_img = ('dark-loading.gif')
-        self.loading_gif = GifLabel(self.root,self.srcPath+'/assets/'+self.loading_img,100)
-
-        self.per = StringVar()
-        self.per.set('Please wait...')
-        #self.loading_label= Label(self.root,textvariable = self.per,bg='white',fg='black') 
-        self.loading_label= Label(self.root,text='please wait..',bg='black',fg='white') 
-        self.copyright = Label(self.root, text="Cup ,\xa9 2020", bg= "red",fg="white"  )
-        self.copyright.pack(side="bottom",fill=X)
-        
-        loaderThread = threading.Thread(target=self.loader)
-        loaderThread.start()
-
-        self.root.mainloop()
-
-    def tuby(self,root):
-        
-
-        self.app = Frame(root,bg='#2c2c2c')
-        self.app.pack(fill='both', expand=True)
-        #multiproces = multiprocessing.Process(target=self.net_check)
-        #multiproces.start()
-        self.downloader_text = Label(self.app,text = 'uby Downloader',font=('Calibri',15,'bold'),bg='#2c2c2c',fg='white')
-        self.downloader_text.place(x=65,y=45)
-
-        self.downloader_label = Label(self.app,image = self.downloader_img,bg='#2c2c2c' )
-        self.downloader_label.place(x=15,y=25)
-
-        #Internet Check
-        thread = threading.Thread(target= self.net_check)
-        thread.start()
-        
-
-        self.url_label = Label(self.app,image = self.url_img,bg='#2c2c2c')
-        self.url_label.place(x=30,y=140)
-
-        self.url = Entry(self.app, width = 35,border=1, relief= SUNKEN , font = ('verdana',15))
-        self.url.place(x=90,y=140)
-        self.url.bind("<Button-1>", self.clear_entry)
-        self.url.insert(0, 'Enter a Url')
-
-        self.Download_label = Label(self.app,image = self.download_img,bg='#2c2c2c')
-        self.Download_label.place(x=160,y=180)
-        self.Download_label.bind('<Button-1>', self.validation)
-        self.Download_label.bind('<Enter>', self.OnHover_Download)
-        self.Download_label.bind('<Leave>', self.OnLeave_Download)
-
-        self.download_text = Label(self.app,text = 'Download',font=('Helvetica',20,'bold','italic'),bg='#df0024',fg='white')
-        self.download_text.place(x=200,y=218)
-        self.download_text.bind('<Button-1>', self.validation)
-        self.download_text.bind('<Enter>', self.OnHover_Download)
-
-    def tuby_plus(self,root):
-        self.under__construction
-        self.app = Frame(self.root,bg='#2c2c2c')
-        self.app.pack()
-        Label(self.app, text = 'This feature will Introduced as soon as possible',font=('Helvetica',20,'bold','italic')).place(relx=0.5, rely=0.48, anchor=CENTER)#.pack(anchor=CENTER, fill=X, expand=YES)
-
-    def mode_switch(self):
-        #global btnState
-
-        if self.btnState == True: #Dark Mode
-            self.mode.config(image=self.dark_img, bg='#202020',activebackground='#090909',bd=0,highlightcolor="#202020", highlightbackground="#202020",)
-            self.root['bg'] = ('#202020')
-            self.title_bar.config(bg='#212121')
-            self.close_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
-            self.add_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
-            self.minus_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
-            self.app.config(bg='#2c2c2c')
-            self.downloader_text.config(bg='#2c2c2c',fg='white')
-            self.downloader_label.config(bg='#2c2c2c')
-            self.url_label.config(bg='#2c2c2c')
-            self.Download_label.config(bg='#2c2c2c')
-            self.status_text.config(bg='#2c2c2c',fg='#f3f3f3')
-            self.status.config(bg='#2c2c2c',fg='#f3f3f3')
-            self.loading_img = ('dark-loading.gif')
-            self.loading_gif = GifLabel(self.root,self.srcPath+'/assets/'+self.loading_img,100)
-            self.btnState = False
-
-        else : #Light Mode
-            self.mode.config(image=self.light_img,bg='#cccccc',activebackground='#cccccc',bd=0,highlightcolor="#cccccc", highlightbackground="#cccccc", )
-            self.root['bg']=('white')
-            self.title_bar.config(bg='#cccccc')
-            self.close_button.config(bg='#74777a',fg='black',activebackground='#bb0000', highlightcolor="#74777a", highlightbackground="#74777a")
-            self.add_button.config(bg='#74777a',  fg='black',activebackground='#e9730c', highlightcolor="#74777a", highlightbackground="#74777a")
-            self.minus_button.config(bg='#74777a',fg='black',activebackground="#107e3e", highlightcolor="#74777a", highlightbackground="#74777a")
-            self.app.config(bg='#f3f3f3')
-            self.downloader_text.config(bg='#f3f3f3',fg='black')
-            self.downloader_label.config(bg='#f3f3f3')
-            self.url_label.config(bg='#f3f3f3')
-            self.Download_label.config(bg='#f3f3f3')
-            self.status_text.config(bg='#f3f3f3',fg='#2c2c2c')
-            self.status.config(bg='#f3f3f3',fg='#2c2c2c')
-            self.loading_img = ('light-loading.gif')
-            self.loading_gif = GifLabel(self.root,self.srcPath+'/assets/'+self.loading_img,100)
-            self.btnState = True
-
-    #Move Window
-    def move_window(self,event):
-        self.root.geometry('+{0}+{1}'.format(event.x_root, event.y_root))
-
-    def changepage(self):
-        
-        self.app.pack_forget()
-        if self.page_Num == 1:
-            self.tuby_plus(self.root)
-            self.page_Num = 2
-        else:
-            self.tuby(self.root)
-            self.page_Num = 1
+try:
+    import tuby.dengine
     
-    def validation(self,event):
-        
-        self.url_link = self.url.get()
-        try:
-            validation = validate.offline_check(self.url_link)
-        except NameError:
-            validation = tuby.validate.offline_check(self.url_link)
-        if (validation == ('ytvideo')):
-            #self.downThread()
-            self.download_thread = threading.Thread(target=self.yt_downloader)
-            self.download_thread.start()
-        elif(validation == ('ytplaylist')):
-            print("It's a playlist")
-        elif(validation == ('fbvideo')):
-            self.copyright.config(bg = '3b5998')
-            
+except ModuleNotFoundError:
+    import dengine
 
-    def net_check(self,*args): 
-        
-        self.status_text = Label(self.app, font = ('Courier 15 bold'),bg='#2c2c2c',fg='white')
-        self.status_text.place(x = 27,y=267)
-        self.status = Label(self.app,bg='#2c2c2c')
-        self.status.place(x=10,y=270)
-        while True:
-            try:
-                self.status_img = validate.check(self.online_img,self.offline_img)
-            except NameError:
-                self.status_img = tuby.validate.check(self.online_img,self.offline_img)
-            self.status.config(image = self.status_img)
-            self.off_or_on = StringVar()
-            self.off_or_on.set('online') if self.status_img==self.online_img else self.off_or_on.set('offline') 
-            self.status_text.config(textvariable = self.off_or_on,)
 
-    def downThread(self):
-        print('Hello World!!')
-        self.download_thread = threading.Thread(target=self.yt_downloader)
-        self.download_thread.start()
-        
+
+banner = (r'''
+      ______      __         
+     /_  __/_  __/ /_  __  __
+      / / / / / / __ \/ / / /
+     / / / /_/ / /_/ / /_/ / 
+    /_/  \__,_/_.___/\__, /  
+                    /____/  
+                   Speed Matters :-)
+    ''')
+
+#########################################################################################################################
+def print_slow(str):
+        for char in str:
+            time.sleep(.05)
+            sys.stdout.write(char)
+            sys.stdout.flush()
+
+if module_error:
     
-    def progress(self,chunk,file_handle,remaining):
-        
-        self.file_downloaded = int(file_size-remaining)
-        per = (self.file_downloaded/file_size)*100
-        self.loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
+    print_slow('Module error Found !!')
 
+else:
+    #print_slow("All modules are installed Successfully ")
+#    os.system('clear')
+#    print("Welcome to Tuby Downloader")
+#    print(banner)
+#    print("Copyright (c) 2020 guruprasadh_j")
+#    print("--- %s seconds ---" % (time.time() - start_time))
+    page_Num = 1
+    srcPath = os.path.dirname(os.path.abspath(__file__))
 
-    def fb_download_video(self,html,quality):
-        """Download the video in HD or SD quality"""
-        print(f"\nDownloading the video in {quality} quality... \n")
-        video_url = re.search(rf'{quality.lower()}_src:"(.+?)"', html).group(1)
-        file_size_request = requests.get(video_url, stream=True)
-        file_size = int(file_size_request.headers['Content-Length'])
-        block_size = 1024
-        #filename = datetime.strftime(datetime.now(), '%Y-%m-%d-%H-%M-%S')
-        #t = tqdm(total=file_size, unit='B', unit_scale=True, desc=filename, ascii=True)
-        #with open(filename + '.mp4', 'wb') as f:
-        #    for data in file_size_request.iter_content(block_size):
-        #        t.update(len(data))
-        #        f.write(data)
-        #t.close()
-        print("\nVideo downloaded successfully.")
-
-    def yt_downloader(self):
-        global file_size
-        #self.download_button.config(state=DISABLED)
-        
-        canvas.place(relx=0.5, rely=0.48, anchor=CENTER)#x=250,y=150)
-        #canvas.config(anchor= CENTER)
-        #canvas.pack(anchor=W, fill=X, expand=YES)
-        self.loading_label.config(anchor = CENTER)
-        self.loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
-        #self.loading_label.pack(side=TOP, anchor=W, fill=X, expand=YES) #.place(x=230,y=250)
-        self.app.pack_forget()
-        #self.loading_gif.place(x=180,y=50)
-        try:
-            url1 = self.url.get()
-            path = filedialog.askdirectory()
-            yt   = YouTube(url1,on_progress_callback=self.progress)
-            if os.path.isdir(path):
-                video = yt.streams.filter(progressive=True,file_extension='mp4').first()
-                file_size = video.filesize
-                video.download (path)
-                self.loading_label.config(text='Download Finish...' )
-                self.loading_label.pack_forget()
-                res = messagebox.askyesno("YouTube Video Downloader","Do youtube another video ?")
-                if res == 1:
-                    self.loading_label.config(text = 'Restarted' )
-                    self.url.delete(0,END)
-                    #self.download_button.config(state= NORMAL)
-                    
-                else:
-                    self.on_closing()
-            else:
-                messagebox.showerror("error","no directory exist")
-        except Exception as e :
-            print(e)
-            if(self.url.get()== ''):
-                self.loading_label.config(text = 'Enter The URL')
-                #self.download_button.config(state=NORMAL)
-            else:
-                self.loading_label.config(text = 'Failed! There is an error.')
-                #elf.download_button.config(state=NORMAL)
-        
-    def clear_entry(self,*args):
-        urlClip = pyperclip.paste()
-        try:
-            validation = validate.offline_check(urlClip)
-        except:
-            validation = tuby.validate.offline_check(urlClip)
-        if(validation == ('ytvideo')):
-            self.url.delete(0, END)
-            self.url.insert(0, urlClip)
-        elif(validation == 'fbvideo'):
-            self.url.delete(0, END)
-            self.url.insert(0, urlClip)
-            self.download_text.config(bg='#3b5998')
-            self.downloader_label.config(image=self.fb_downloader_img)
-            self.Download_label.config(image=self.fb_download_img)
-            self.copyright.config(bg = '#3b5998')
-        else:
-            self.url.delete(0, END)
-    def loader(self,*args):
-        global canvas
-        canvas = Canvas(self.root,width=100,height = 90,background="black",highlightthickness=1, highlightbackground="black")
-        #canvas.place(x=230,y=130)
-        p = TurtleScreen(canvas)
-        p.bgcolor('black')
-        t = RawTurtle(p)
-        t.speed(10)
-        #t.title("Loader")
-        #t.bgcolor("black")
-        colors = ('red','grey')
-
-        for a in range(360):
-            t.pencolor(colors[a%2]) 
-            t.pensize(5)
-            t.circle(20)
-            t.hideturtle()
-
-    def OnPressed_Download(self,*args):
-        #print('OnPressed_Download')
-        self.app.pack_forget()
-        self.loading_gif.place(x=180,y=50)
-        
-
-    def OnHover_Download(self,*args):
-        #print('OnHover_Download')
-        self.download_text.config(fg='#2c2c2c')
-
-
-    def OnLeave_Download(self,*args):
-        #print('OnLeave_Download')
-        self.download_text.config(fg='#f3f3f3')
-
-    def on_closing(self,*arg):
-        #if messagebox.askokcancel("Quit", "Do you want to quit?"):
-        #self.root.destroy()
-        os._exit(0)
-    def under__construction(self,*args):
-        print('This feature is under construction')
-if __name__ == "__main__":
+##########################################################################################################################
+# For Py Installer
+def resource_path(relative_path):
+    #This Secource Path is for converterting .py to .exe or .appimage
     try:
-        ui()
-    except Exception as e:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.dirname(os.path.abspath(__file__)) #os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
+
+########################################################################################################################
+#COLOUR CODE
+
+#Youtube Color code
+def yt_color_code(*args):
+    download_text.config(bg='#df0024')
+    downloader_label.config(image=downloader_img)
+    Download_label.config(image=download_img)
+    copyright.config(bg = '#df0024')
+
+#FaceBook Color Code
+def fb_color_code(*args):
+    download_text.config(bg='#3b5998')
+    downloader_label.config(image=fb_downloader_img)
+    Download_label.config(image=fb_download_img)
+    copyright.config(bg = '#3b5998')
+
+#Dark or Light Mode
+def mode_switch():
+    global btnState
+    if btnState == True: #Dark Mode
+        mode.config(image=dark_img, bg='#202020',activebackground='#090909',bd=0,highlightcolor="#202020", highlightbackground="#202020",)
+        root['bg'] = ('#202020')
+        title_bar.config(bg='#212121')
+        close_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
+        add_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
+        minus_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
+        app.config(bg='#2c2c2c')
+        i_icon.config(bg='#2c2c2c')
+        downloader_text.config(bg='#2c2c2c',fg='white')
+        downloader_label.config(bg='#2c2c2c')
+        url_label.config(bg='#2c2c2c')
+        Download_label.config(bg='#2c2c2c')
+        status_text.config(bg='#2c2c2c',fg='#f3f3f3')
+        status.config(bg='#2c2c2c',fg='#f3f3f3')
+        btnState = False
+
+    else : #Light Mode
+        mode.config(image=light_img,bg='#cccccc',activebackground='#cccccc',bd=0,highlightcolor="#cccccc", highlightbackground="#cccccc", )
+        root['bg']=('white')
+        title_bar.config(bg='#cccccc')
+        close_button.config(bg='#74777a',fg='black',activebackground='#bb0000', highlightcolor="#74777a", highlightbackground="#74777a")
+        add_button.config(bg='#74777a',  fg='black',activebackground='#e9730c', highlightcolor="#74777a", highlightbackground="#74777a")
+        minus_button.config(bg='#74777a',fg='black',activebackground="#107e3e", highlightcolor="#74777a", highlightbackground="#74777a")
+        app.config(bg='#f3f3f3')
+        i_icon.config(bg = '#f3f3f3')
+        downloader_text.config(bg='#f3f3f3',fg='black')
+        downloader_label.config(bg='#f3f3f3')
+        url_label.config(bg='#f3f3f3')
+        Download_label.config(bg='#f3f3f3')
+        status_text.config(bg='#f3f3f3',fg='#2c2c2c')
+        status.config(bg='#f3f3f3',fg='#2c2c2c')
+        loading_img = ('light-loading.gif')
+        btnState = True
+
+#Change Frame
+def changepage():
+    global page_Num
+    app.pack_forget()
+
+    if page_Num == 1:
+        tuby_plus(root)
+        page_Num = 2
+
+    else:
+
+        tuby_regular(root)
+        page_Num = 1
+
+#########################################################################################################################
+# MINI TASK
+#On Closing
+def on_closing(*arg):
+    os._exit(0)
+
+#Move Windows
+def move_window(event):
+    root.geometry('+{0}+{1}'.format(event.x_root, event.y_root))
+
+#Download Button
+def OnHover_Download(*args):
+    download_text.config(fg='#2c2c2c')
+def OnLeave_Download(*args):
+    download_text.config(fg='#f3f3f3')
+
+#Clear Entry Box and validation
+def clear_entry(*args):
+    urlClip = pyperclip.paste()
+    try:
+        validation = validate.offline_check(urlClip)
+    
+    except:
+        validation = tuby.validate.offline_check(urlClip)
+
+    if(validation == ('ytvideo')):
+        url.delete(0, END)
+        url.insert(0, urlClip)
+        yt_color_code()
+
+    elif(validation == 'fbvideo'):
+        url.delete(0, END)
+        url.insert(0, urlClip)
+        fb_color_code()
+
+    else:
+        url.delete(0, END)
+
+#Validation
+def validation(event):
+    url_link = url.get()
+    try:
+        validation = validate.offline_check(url_link)
+    except NameError:
+        validation = tuby.validate.offline_check(url_link)
+
+    if (validation == ('ytvideo')):
+        download_thread = threading.Thread(target=yt_downloader)
+        download_thread.start()
+
+    elif(validation == ('ytplaylist')):
+        print("It's a playlist")
+    
+    elif(validation == ('fbvideo')):
+        fb_resolution(url_link)
+        
+        
+# Loader 
+def loader(*args):
+    global canvas , colors
+    canvas = Canvas(root,width=100,height = 90,background="black",highlightthickness=1, highlightbackground="black")
+    p = TurtleScreen(canvas)
+    p.bgcolor('black')
+    t = RawTurtle(p)
+    t.speed(10)
+    colors = ('red','grey')
+    for a in range(360):
+        t.pencolor(colors[a%2]) 
+        t.pensize(5)
+        t.circle(20)
+        t.hideturtle()
+
+def about(*args):
+    license_prompt = Toplevel()
+    license_prompt.title('About')
+    license_prompt.geometry('700x400')
+    license_prompt.iconphoto(False,i_button_img)
+    license_text = Text(license_prompt,background="#2c2c2c", foreground="#888")#justify = CENTER,)
+    license_text.pack(fill='both', expand=True)
+    license_text.tag_config('justified', justify=CENTER)
+    #license_text.tag_config("here", background="#2c2c2c", foreground="#888")  #.tag_add("center", 1.0, "end")
+    f = open('LICENSE')
+    license_lines = f.readlines()
+    for line in license_lines:
+        license_text.insert('end', line, 'justified')
+    license_text['state'] = DISABLED
+    f.close()
+    #webbrowser.open("https://gpstudiolaboftech.github.io/")
+
+#########################################################################################################################
+
+def progress(chunk,file_handle,remaining):
+    file_downloaded = int(file_size-remaining)
+    per = (file_downloaded/file_size)*100
+    loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
+
+def yt_downloader():
+    global file_size
+    
+    canvas.place(relx=0.5, rely=0.48, anchor=CENTER)
+    loading_label.config(anchor = CENTER)
+    loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
+    app.pack_forget()
+    
+    try:
+        url1 = url.get()
+        path = filedialog.askdirectory()
+        yt   = YouTube(url1,on_progress_callback=progress)
+        if os.path.isdir(path):
+            video = yt.streams.filter(progressive=True,file_extension='mp4').first()
+            file_size = video.filesize
+            video.download (path)
+            loading_label.config(text='Download Finish...' )
+            loading_label.pack_forget()
+            res = messagebox.askyesno("YouTube Video Downloader","Do youtube another video ?")
+            
+            if res == 1:
+                loading_label.config(text = 'Restarted' )
+                url.delete(0,END)
+                
+            else:
+                on_closing()
+
+        else:
+            messagebox.showerror("error","no directory exist")
+    except Exception as e :
         print(e)
+        if(url.get()== ''):
+            loading_label.config(text = 'Enter The URL')
+            
+        else:
+            loading_label.config(text = 'Failed! There is an error.')
+
+def fb_resolution(url_link):
+    global fb_url_link,quality
+    print(url_link)
+    fb_url_link = str(url_link)
+    fb_list = validate.fb_get_data(url_link)
+    print(fb_list)
+    if len(fb_list) == 2:
+        if 0 in fb_list and 1 in fb_list:
+            quality = ("HD")
+            fb_thread = threading.Thread( target= fb_download )
+            fb_thread.start()
+
+        elif 1 in fb_list and 2 in fb_list:
+            quality = ("SD")
+            fb_thread = threading.Thread( target= fb_download )
+            fb_thread.start()
+        elif 0 in fb_list and 3 in fb_list:
+            quality = ("HD")
+            fb_thread = threading.Thread( target= fb_download )
+            fb_thread.start()
+
+def fb_download():
+    
+    canvas.place(relx=0.5, rely=0.48, anchor=CENTER)
+    loading_label.config(anchor = CENTER)
+    loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
+    app.pack_forget()    
+
+    html = requests.get(fb_url_link).content.decode('utf-8')
+    print(f"\nDownloading the video in {quality} quality... \n")
+    video_url = re.search(rf'{quality.lower()}_src:"(.+?)"', html).group(1)
+    file_size_request = requests.get(video_url, stream=True)
+    file_size = int(file_size_request.headers['Content-Length'])
+    block_size = 1024
+    path = filedialog.askdirectory()
+    fb_filename = datetime.strftime(datetime.now(), path +'/%Y-%m-%d-%H-%M-%S')
+    print(file_size)
+    progress = tkinter.ttk.Progressbar(root, orient = HORIZONTAL, length = 800,maximum = 100, mode = 'determinate') 
+    progress.place(relx=0.5, rely=0.48, anchor=CENTER)
+    t = tqdm(total=file_size, unit='B', unit_scale=True, desc=fb_filename, ascii=True)
+    file_downloaded = 0
+    
+    with open(fb_filename + '.mp4', 'wb') as f:
+        
+        for data in file_size_request.iter_content(block_size):
+            
+            t.update(len(data))
+            file_downloaded += 1024
+            per = (file_downloaded/file_size)*100
+            loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
+            progress['value'] = per 
+            block_size +=block_size
+            root.update_idletasks()            
+            f.write(data)
+
+    t.close()
+
+    print("\nVideo downloaded successfully.")
+
+#########################################################################################################################
+#Internet Check
+def net_check(*args): 
+    global status_text , status
+    status_text = Label(app, font = ('Courier 15 bold'),bg='#2c2c2c',fg='white')
+    status_text.place(x = 27,y=267)
+    status = Label(app,bg='#2c2c2c')
+    status.place(x=10,y=270)
+    while True:
+        try:
+            status_img = validate.check(online_img,offline_img)
+        except NameError:
+            status_img = tuby.validate.check(online_img,offline_img)
+        status.config(image = status_img)
+        off_or_on = StringVar()
+        off_or_on.set('online') if status_img==online_img else off_or_on.set('offline') 
+        status_text.config(textvariable = off_or_on,)
+
+# Regular GUi
+def tuby_regular(root):
+    global app , page_Num , downloader_text , downloader_label , i_icon , url_label  , url , Download_label ,download_text
+    
+    page_Num = 1
+    app = Frame(root,bg='#2c2c2c')
+    app.pack(fill='both', expand=True)
+    downloader_text = Label(app,text = 'uby Downloader',font=('Calibri',15,'bold'),bg='#2c2c2c',fg='white')
+    downloader_text.place(x=65,y=45)
+
+    #downloader_text.place(relx=-10, rely=-10, anchor=CENTER,)
+    downloader_label = Label(app,image = downloader_img,bg='#2c2c2c' )
+    downloader_label.place(x=15,y=25)
+    #Internet Check
+    thread = threading.Thread(target= net_check)
+    thread.start()
+    
+    i_icon = Label(app,image = i_button_img,bg='#2c2c2c')
+    i_icon.place(x=560,y=10)
+    i_icon.bind('<Button-1>',about)
+    url_label = Label(app,image = url_img,bg='#2c2c2c')
+    url_label.place(x=30,y=140)
+    url = Entry(app, width = 35,border=1, relief= SUNKEN , font = ('verdana',15))
+    url.place(x=90,y=140)
+    url.bind("<Button-1>", clear_entry)
+    url.insert(0, 'Enter a Url')
+    Download_label = Label(app,image = download_img,bg='#2c2c2c')
+    Download_label.place(x=160,y=180)
+    Download_label.bind('<Button-1>', validation)
+    Download_label.bind('<Enter>', OnHover_Download)
+    Download_label.bind('<Leave>', OnLeave_Download)
+    download_text = Label(app,text = 'Download',font=('Helvetica',20,'bold','italic'),bg='#df0024',fg='white')
+    download_text.place(x=200,y=218)
+    download_text.bind('<Button-1>', validation)
+    download_text.bind('<Enter>', OnHover_Download)
+
+def tuby_plus(root):
+    global app
+    app = Frame(root,bg='#2c2c2c')
+    app.pack(fill='both', expand=True)
+    coming_soon = Label(app, text = 'This feature will Introduced as soon as possible',font=('Helvetica',15,'bold'),bg='#2c2c2c',fg='white')
+    coming_soon.pack(anchor=CENTER, fill=X, expand=YES)
+
+
+def structure():
+    global page_Num , srcPath , root , title_bar , close_button , add_button , minus_button , btnState , dark_img , light_img , mode , offline_img , online_img ,  downloader_img , fb_downloader_img , url_img , download_img , fb_download_img , loading_gif , loading_label , i_button_img , copyright , loaderThread 
+
+    root = Tk(className='Tuby')
+    root.protocol("WM_DELETE_WINDOW", on_closing)
+    iconres = resource_path(srcPath+"/assets/favicon.png")
+    icon = PhotoImage(file = (iconres))
+    root.iconphoto(False, icon)
+    root.title('Tuby (3.8.5)')
+    root['bg'] = ('black') #202020
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    x_coordinate = (screen_width/2) - (600/2)
+    y_coordinate = (screen_height/2) - (350/2)
+    root.geometry("{}x{}+{}+{}".format(600, 350, int(x_coordinate), int(y_coordinate)))
+    
+    ########################################################################################
+    #Title Bar
+    title_bar = Frame(root, bg='#212121', relief='raised', bd=0, height=20, width=600)
+    close_button = Button(title_bar ,text='X', command=on_closing,   width=1, bg="#090909", fg="#888",activebackground='#ff453a',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
+    add_button   = Button(title_bar ,text='+', command=changepage,   width=1, bg="#090909", fg="#888",activebackground='#ff9f0a',activeforeground='black', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
+    minus_button = Button(title_bar ,text='_', command=root.destroy, width=1, bg="#090909", fg="#888",activebackground='#32d74b',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
+    btnState  = False 
+    
+    dark_img_res =resource_path(srcPath + '/assets/dark-mode.png')
+    dark_img  = Image.open(dark_img_res)
+    dark_img  = dark_img.resize((37,20),Image.ANTIALIAS)
+    dark_img  = ImageTk.PhotoImage(dark_img)
+    
+    light_img_res = resource_path(srcPath + '/assets/light-mode.png') 
+    light_img = Image.open(light_img_res)
+    light_img = light_img.resize((37,20),Image.ANTIALIAS)
+    light_img = ImageTk.PhotoImage(light_img)
+    mode = Button(title_bar,image= dark_img,command=mode_switch,bg='#202020',activebackground='#090909',bd=0,highlightcolor="#202020", highlightbackground="#202020",)
+    mode.pack(side='left')
+    title_bar.pack(side='top', fill=X)
+    close_button.pack(side='right')
+    add_button.pack(side='right')
+    minus_button.pack(side='right')
+    title_bar.bind('<B1-Motion>', move_window)
+
+    ############################################################################################
+
+    #Collection Images
+
+    offline_img_res = resource_path(srcPath + '/assets/red.png')
+    offline_img = Image.open(offline_img_res)
+    offline_img = offline_img.resize((10,10),Image.ANTIALIAS)
+    offline_img = ImageTk.PhotoImage(offline_img)
+
+    online_img_res = resource_path(srcPath + '/assets/green.png')
+    online_img = Image.open(online_img_res)
+    online_img = online_img.resize((10,10),Image.ANTIALIAS)
+    online_img = ImageTk.PhotoImage(online_img)
+
+    downloader_img_res = resource_path(srcPath + '/assets/downloader.png')
+    downloader_img = Image.open(downloader_img_res)
+    downloader_img = downloader_img.resize((50,50),Image.ANTIALIAS)
+    downloader_img = ImageTk.PhotoImage(downloader_img)
+
+    fb_downloader_img_res = resource_path(srcPath + '/assets/fb_downloader.png')
+    fb_downloader_img = Image.open(fb_downloader_img_res)
+    fb_downloader_img = fb_downloader_img.resize((50,50),Image.ANTIALIAS)
+    fb_downloader_img = ImageTk.PhotoImage(fb_downloader_img)
+
+    url_img_res = resource_path(srcPath + '/assets/url.png')
+    url_img  = Image.open(url_img_res)
+    url_img  = url_img.resize((30,30),Image.ANTIALIAS)
+    url_img  = ImageTk.PhotoImage(url_img)
+
+    download_img_res = resource_path(srcPath + '/assets/download.png')
+    download_img = Image.open(download_img_res)
+    download_img = download_img.resize((260,100),Image.ANTIALIAS)
+    download_img = ImageTk.PhotoImage(download_img)
+
+    fb_download_img_res = resource_path(srcPath + '/assets/fb_download.png')
+    fb_download_img = Image.open(fb_download_img_res)
+    fb_download_img = fb_download_img.resize((260,100),Image.ANTIALIAS)
+    fb_download_img = ImageTk.PhotoImage(fb_download_img)
+
+    i_button_img_res = resource_path(srcPath + '/assets/i.png')
+    i_button_img = Image.open(i_button_img_res)
+    i_button_img = i_button_img.resize((25,25),Image.ANTIALIAS)
+    i_button_img = ImageTk.PhotoImage(i_button_img)
+
+    tuby_regular(root)
+    
+    ##############################################################################################
+    
+    loading_label= Label(root,text='please wait..',bg='black',fg='white') 
+    copyright = Label(root, text="Cup ,\xa9 2020", bg= "red",fg="white" )
+    copyright.pack(side="bottom",fill=X)
+    
+    loaderThread = threading.Thread(target=loader)
+    loaderThread.start()
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    os.system('clear')
+    print("Welcome to Tuby Downloader")
+    print(banner)
+    print("Copyright (c) 2020 guruprasadh_j")
+    print("--- %s seconds ---" % (time.time() - start_time))
+    structure()

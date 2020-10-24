@@ -1,15 +1,19 @@
-
-
 import os
+import sys
 import threading
+import tkinter.ttk
+import urllib
+import webbrowser
+from datetime import datetime
 from tkinter import *
 from tkinter import filedialog, messagebox
 from turtle import *
 
-import pyperclip  
+import pyperclip
 import requests
 from PIL import Image, ImageTk
 from pytube import YouTube
+from tqdm import tqdm
 
 try:
     #print('hello')
@@ -100,6 +104,23 @@ def on_closing(*arg):
 def under__construction(*args):
     print('This feature is under construction')
 
+def about(*args):
+    license_prompt = Toplevel()
+    license_prompt.title('About')
+    license_prompt.geometry('700x400')
+    license_prompt.iconphoto(False,i_button_img)
+    license_text = Text(license_prompt,background="#2c2c2c", foreground="#888")#justify = CENTER,)
+    license_text.pack(fill='both', expand=True)
+    license_text.tag_config('justified', justify=CENTER)
+    #license_text.tag_config("here", background="#2c2c2c", foreground="#888")  #.tag_add("center", 1.0, "end")
+    f = open('LICENSE')
+    license_lines = f.readlines()
+    for line in license_lines:
+        license_text.insert('end', line, 'justified')
+    license_text['state'] = DISABLED
+    f.close()
+    #webbrowser.open("https://gpstudiolaboftech.github.io/")
+
 def changepage():
     global page_Num
     app.pack_forget()
@@ -125,8 +146,11 @@ def validation(event):
         download_thread.start()
     elif(validation == ('ytplaylist')):
         print("It's a playlist")
+    
     elif(validation == ('fbvideo')):
-        copyright.config(bg = '3b5998')
+        fb_resolution(url_link)
+        print('hello world!!')
+        #copyright.config(bg = '3b5998')
     
         
 def net_check(*args): 
@@ -163,15 +187,14 @@ def fb_color_code(*args):
     copyright.config(bg = '#3b5998')
 
 def tuby_normal(root):
-    global app , page_Num , downloader_text , downloader_label , url_label  , url , Download_label ,download_text
+    global app , page_Num , downloader_text , downloader_label , i_icon , url_label  , url , Download_label ,download_text
     page_Num = 1
     app = Frame(root,bg='#2c2c2c')
     #app.place(relx=0, rely=0, anchor=CENTER,)
     app.pack(fill='both', expand=True)
     downloader_text = Label(app,text = 'uby Downloader',font=('Calibri',15,'bold'),bg='#2c2c2c',fg='white')
     downloader_text.place(x=65,y=45)
-    i_icon = Label(app,image = i_button_img,bg='#2c2c2c')
-    i_icon.place(x=555,y=10)
+
     #downloader_text.place(relx=-10, rely=-10, anchor=CENTER,)
     downloader_label = Label(app,image = downloader_img,bg='#2c2c2c' )
     downloader_label.place(x=15,y=25)
@@ -179,6 +202,9 @@ def tuby_normal(root):
     thread = threading.Thread(target= net_check)
     thread.start()
     
+    i_icon = Label(app,image = i_button_img,bg='#2c2c2c')
+    i_icon.place(x=555,y=10)
+    i_icon.bind('<Button-1>',about)
     url_label = Label(app,image = url_img,bg='#2c2c2c')
     url_label.place(x=30,y=140)
     url = Entry(app, width = 35,border=1, relief= SUNKEN , font = ('verdana',15))
@@ -214,6 +240,7 @@ def mode_switch():
         add_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
         minus_button.config(bg='#090909',fg='#888',highlightcolor="#090909", highlightbackground="#090909")
         app.config(bg='#2c2c2c')
+        i_icon.config(bg='#2c2c2c')
         downloader_text.config(bg='#2c2c2c',fg='white')
         downloader_label.config(bg='#2c2c2c')
         url_label.config(bg='#2c2c2c')
@@ -230,6 +257,7 @@ def mode_switch():
         add_button.config(bg='#74777a',  fg='black',activebackground='#e9730c', highlightcolor="#74777a", highlightbackground="#74777a")
         minus_button.config(bg='#74777a',fg='black',activebackground="#107e3e", highlightcolor="#74777a", highlightbackground="#74777a")
         app.config(bg='#f3f3f3')
+        i_icon.config(bg = '#f3f3f3')
         downloader_text.config(bg='#f3f3f3',fg='black')
         downloader_label.config(bg='#f3f3f3')
         url_label.config(bg='#f3f3f3')
@@ -241,9 +269,14 @@ def mode_switch():
         btnState = True
 
 def progress(chunk,file_handle,remaining):
+    
     file_downloaded = int(file_size-remaining)
     per = (file_downloaded/file_size)*100
     loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
+    #display_progress_bar(file_downloaded, file_size)
+    #while per<100:
+    #t.update(round(per))
+
 
 def yt_downloader():
     global file_size
@@ -256,10 +289,15 @@ def yt_downloader():
     try:
         url1 = url.get()
         path = filedialog.askdirectory()
-        yt   = YouTube(url1,on_progress_callback=progress)
+        yt   = YouTube(url1,on_progress_callback=progress)# and on_progress)
         if os.path.isdir(path):
+
             video = yt.streams.filter(progressive=True,file_extension='mp4').first()
+            
             file_size = video.filesize
+            
+            #t = tqdm(total=100 )#unit='B', unit_scale=True, ascii=True)
+            
             video.download (path)
             loading_label.config(text='Download Finish...' )
             loading_label.pack_forget()
@@ -275,11 +313,56 @@ def yt_downloader():
             messagebox.showerror("error","no directory exist")
     except Exception as e :
         print(e)
-        if(url.get()== ''):
-            loading_label.config(text = 'Enter The URL')
-            #download_button.config(state=NORMAL)
-        else:
-            loading_label.config(text = 'Failed! There is an error.')
+#    except Exception :
+#        #print(e)
+#        if(url.get()== ''):
+#            loading_label.config(text = 'Enter The URL')
+#            #download_button.config(state=NORMAL)
+#        else:
+#            loading_label.config(text = 'Failed! There is an error.')
+#
+
+def fb_download():
+    
+    """Download the video in HD or SD quality"""
+    canvas.place(relx=0.5, rely=0.48, anchor=CENTER)#x=250,y=150)
+    loading_label.config(anchor = CENTER)
+    loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
+    app.pack_forget()
+    
+    
+
+    html = requests.get(fb_url_link).content.decode('utf-8')
+    print(f"\nDownloading the video in {quality} quality... \n")
+    video_url = re.search(rf'{quality.lower()}_src:"(.+?)"', html).group(1)
+    file_size_request = requests.get(video_url, stream=True)
+    file_size = int(file_size_request.headers['Content-Length'])
+    block_size = 1024
+    path = filedialog.askdirectory()
+    fb_filename = datetime.strftime(datetime.now(), path +'/%Y-%m-%d-%H-%M-%S')
+    print(file_size)
+    progress = tkinter.ttk.Progressbar(root, orient = HORIZONTAL, length = 800,maximum = 100, mode = 'determinate') 
+    progress.place(relx=0.5, rely=0.48, anchor=CENTER)
+    t = tqdm(total=file_size, unit='B', unit_scale=True, desc=fb_filename, ascii=True)
+    file_downloaded = 0
+    with open(fb_filename + '.mp4', 'wb') as f:
+        for data in file_size_request.iter_content(block_size):
+            t.update(len(data))
+            #print(len(data))
+            file_downloaded += 1024
+            per = (file_downloaded/file_size)*100
+            loading_label.config(text='{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
+            progress['value'] = per 
+            block_size +=block_size
+            root.update_idletasks() 
+            #per = (len(data)/file_size)*100
+
+            #loading_label.config('{:00.0f} % downloaded'.format(per),font=('Helvetica',20,'bold','italic'),)
+            
+            f.write(data)
+    t.close()
+
+    print("\nVideo downloaded successfully.")
 
 def clear_entry(*args):
     urlClip = pyperclip.paste()
@@ -421,7 +504,7 @@ def structure():
 
     i_button_img_res = resource_path(srcPath + '/assets/i.png')
     i_button_img = Image.open(i_button_img_res)
-    i_button_img = i_button_img.resize((30,30),Image.ANTIALIAS)
+    i_button_img = i_button_img.resize((25,25),Image.ANTIALIAS)
     i_button_img = ImageTk.PhotoImage(i_button_img)
 
     tuby_normal(root)
@@ -437,6 +520,32 @@ def structure():
     loaderThread = threading.Thread(target=loader)
     loaderThread.start()
     root.mainloop()
+
+
+
+def fb_resolution(url_link):
+    global fb_url_link,quality
+    print(url_link)
+    fb_url_link = str(url_link)
+    fb_list = validate.fb_get_data(url_link)
+    print(fb_list)
+    if len(fb_list) == 2:
+        if 0 in fb_list and 1 in fb_list:
+            quality = ("HD")
+            fb_thread = threading.Thread( target= fb_download )
+            fb_thread.start()
+
+        elif 1 in fb_list and 2 in fb_list:
+            quality = ("SD")
+            fb_thread = threading.Thread( target= fb_download )
+            fb_thread.start()
+        elif 0 in fb_list and 3 in fb_list:
+            quality = ("HD")
+            fb_thread = threading.Thread( target= fb_download )
+            fb_thread.start()
+
+
+
 
 if __name__ == "__main__":
 
