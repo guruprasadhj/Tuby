@@ -273,8 +273,17 @@ def tuby_normal(root):
 
 def tuby_plus(root):
     global app
+    x_coordinate = (screen_width/2) - (700/2)
+    y_coordinate = (screen_height/2) - (500/2)
+    root.geometry("{}x{}+{}+{}".format(700, 500, int(x_coordinate), int(y_coordinate)))
     app = Frame(root,bg='#2c2c2c')
     app.pack(fill='both', expand=True)
+    downloader_label = Label(app,image = downloader_img,bg='#2c2c2c' )
+    downloader_label.place(x=7,y=7)
+
+    url = Entry(app, width = 35, border=0, relief= FLAT , font = ('verdana',15),bg='#121212')
+    url.place(x=100,y=20)
+
     coming_soon = Label(app, text = 'This feature will Introduced as soon as possible',font=('Helvetica',15,'bold'),bg='#2c2c2c',fg='white')
     coming_soon.pack(anchor=CENTER, fill=X, expand=YES) #.place(relx=0.5, rely=0.48, anchor=CENTER)#\
 
@@ -331,37 +340,36 @@ def yt_downloader():
     global file_size
        
     canvas.place(relx=0.5, rely=0.48, anchor=CENTER)#x=250,y=150)
-    loading_label.config(anchor = CENTERtuby_plus)
+    loading_label.config(anchor = CENTER)
     loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
     app.pack_forget()
     
-    try:
-        url1 = url.get()
-        path = filedialog.askdirectory()
-        yt   = YouTube(url1,on_progress_callback=progress)# and on_progress)
-        if os.path.isdir(path):
-
-            video = yt.streams.filter(progressive=True,file_extension='mp4').first()
+    
+    url1 = url.get()
+    path = filedialog.askdirectory()
+    yt   = YouTube(url1,on_progress_callback=progress)# and on_progress)
+    if os.path.isdir(path):
+        video = yt.streams.filter(progressive=True,file_extension='mp4').first()
+        
+        file_size = video.filesize
+        
+        #t = tqdm(total=100 )#unit='B', unit_scale=True, ascii=True)
+        
+        video.download (path)
+        loading_label.config(text='Download Finish...' )
+        loading_label.pack_forget()
+        res = messagebox.askyesno("YouTube Video Downloader","Do youtube another video ?")
+        if res == 1:
+            loading_label.config(text = 'Restarted' )
+            url.delete(0,END)
+            #download_button.config(state= NORMAL)
             
-            file_size = video.filesize
-            
-            #t = tqdm(total=100 )#unit='B', unit_scale=True, ascii=True)
-            
-            video.download (path)
-            loading_label.config(text='Download Finish...' )
-            loading_label.pack_forget()
-            res = messagebox.askyesno("YouTube Video Downloader","Do youtube another video ?")
-            if res == 1:
-                loading_label.config(text = 'Restarted' )
-                url.delete(0,END)
-                #download_button.config(state= NORMAL)
-                
-            else:
-                on_closing()
         else:
-            messagebox.showerror("error","no directory exist")
-    except Exception as e :
-        print(e)
+            on_closing()
+    else:
+        messagebox.showerror("error","no directory exist")
+    #except Exception as e :
+     #   print(e)
 #    except Exception :
 #        #print(e)
 #        if(url.get()== ''):
@@ -451,7 +459,7 @@ def loader(*args):
 
 
 def structure():
-    global page_Num , srcPath , root , title_bar , close_button , add_button , minus_button , btnState , dark_img , light_img , mode , offline_img , online_img ,  downloader_img , fb_downloader_img , url_img , download_img , fb_download_img , loading_img , loading_gif , per , loading_label , i_button_img , copyright , loaderThread #download_imgdark_img,root,add_button,copyright,close_button,btnState,mode,title_bar
+    global page_Num , srcPath , root , screen_width , screen_height , x_coordinate , y_coordinate , title_bar , close_button , add_button , minus_button , btnState , dark_img , light_img , mode , offline_img , online_img ,  downloader_img , fb_downloader_img , url_img , download_img , fb_download_img , loading_img , loading_gif , per , loading_label , i_button_img , copyright , loaderThread #download_imgdark_img,root,add_button,copyright,close_button,btnState,mode,title_bar
 
     os. system('clear') 
     print("Welcome to Tuby Downloader")
@@ -556,7 +564,7 @@ def structure():
     i_button_img = i_button_img.resize((25,25),Image.ANTIALIAS)
     i_button_img = ImageTk.PhotoImage(i_button_img)
 
-    tuby_plus(root)
+    tuby_normal(root)
     loading_img_res = resource_path(srcPath + '/assets/dark-loading.gif')
     loading_gif = GifLabel(root,loading_img_res,100)
     

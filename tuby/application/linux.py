@@ -605,12 +605,12 @@ def structure():
     minus_button = Button(title_bar ,text='_', command=root.iconify, width=1, bg="#090909", fg="#888",activebackground='#32d74b',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
     btnState  = False 
     
-    dark_img_res =resource_path( 'dark-mode.png')
+    dark_img_res =resource_path( 'assets/dark-mode.png')
     dark_img  = Image.open(dark_img_res)
     dark_img  = dark_img.resize((37,20),Image.ANTIALIAS)
     dark_img  = ImageTk.PhotoImage(dark_img)
     
-    light_img_res = resource_path( 'light-mode.png') 
+    light_img_res = resource_path( 'assets/light-mode.png') 
     light_img = Image.open(light_img_res)
     light_img = light_img.resize((37,20),Image.ANTIALIAS)
     light_img = ImageTk.PhotoImage(light_img)
@@ -626,42 +626,42 @@ def structure():
 
     #Collection Images
 
-    offline_img_res = resource_path( 'red.png')
+    offline_img_res = resource_path( 'assets/red.png')
     offline_img = Image.open(offline_img_res)
     offline_img = offline_img.resize((10,10),Image.ANTIALIAS)
     offline_img = ImageTk.PhotoImage(offline_img)
 
-    online_img_res = resource_path( 'green.png')
+    online_img_res = resource_path( 'assets/green.png')
     online_img = Image.open(online_img_res)
     online_img = online_img.resize((10,10),Image.ANTIALIAS)
     online_img = ImageTk.PhotoImage(online_img)
 
-    downloader_img_res = resource_path( 'downloader.png')
+    downloader_img_res = resource_path( 'assets/downloader.png')
     downloader_img = Image.open(downloader_img_res)
     downloader_img = downloader_img.resize((50,50),Image.ANTIALIAS)
     downloader_img = ImageTk.PhotoImage(downloader_img)
 
-    fb_downloader_img_res = resource_path( 'fb_downloader.png')
+    fb_downloader_img_res = resource_path( 'assets/fb_downloader.png')
     fb_downloader_img = Image.open(fb_downloader_img_res)
     fb_downloader_img = fb_downloader_img.resize((50,50),Image.ANTIALIAS)
     fb_downloader_img = ImageTk.PhotoImage(fb_downloader_img)
 
-    url_img_res = resource_path( 'url.png')
+    url_img_res = resource_path( 'assets/url.png')
     url_img  = Image.open(url_img_res)
     url_img  = url_img.resize((30,30),Image.ANTIALIAS)
     url_img  = ImageTk.PhotoImage(url_img)
 
-    download_img_res = resource_path( 'download.png')
+    download_img_res = resource_path( 'assets/download.png')
     download_img = Image.open(download_img_res)
     download_img = download_img.resize((260,100),Image.ANTIALIAS)
     download_img = ImageTk.PhotoImage(download_img)
 
-    fb_download_img_res = resource_path( 'fb_download.png')
+    fb_download_img_res = resource_path( 'assets/fb_download.png')
     fb_download_img = Image.open(fb_download_img_res)
     fb_download_img = fb_download_img.resize((260,100),Image.ANTIALIAS)
     fb_download_img = ImageTk.PhotoImage(fb_download_img)
 
-    i_button_img_res = resource_path( 'i.png')
+    i_button_img_res = resource_path( 'assets/assets/i.png')
     i_button_img = Image.open(i_button_img_res)
     i_button_img = i_button_img.resize((25,25),Image.ANTIALIAS)
     i_button_img = ImageTk.PhotoImage(i_button_img)

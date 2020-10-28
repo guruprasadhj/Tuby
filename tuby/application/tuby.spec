@@ -4,10 +4,10 @@ block_cipher = None
 
 
 a = Analysis(['linux.py'],
-             pathex=['write Your loaction],
+             pathex=['/home/guruprasadh_j/Downloads/Tuby/tuby/application'],
              binaries=[],
              datas = [
-                 ('./assets/*', '.')
+                 ('./assets/*', 'assets')
                  ],
              hiddenimports=[],
              hookspath=[],
