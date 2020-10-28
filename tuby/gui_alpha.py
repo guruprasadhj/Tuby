@@ -40,6 +40,45 @@ def resource_path(relative_path):
         base_path = os.path.dirname(os.path.abspath(__file__)) #os.path.abspath(".")
         return os.path.join(base_path, relative_path)
 
+class ToolTip(object):
+
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
+
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 20
+        y = y + cy + self.widget.winfo_rooty() + 20
+        self.tipwindow = tw = Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+        label = Label(tw, text=self.text, justify=LEFT,
+                      background="#2c2c2c", foreground='white' , relief=SOLID, borderwidth=1,
+                      font=("tahoma", "8", "normal"))
+        label.pack(ipadx=1)
+
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+
+def CreateToolTip(widget, text):
+    toolTip = ToolTip(widget)
+    def enter(event):
+        toolTip.showtip(text)
+    def leave(event):
+        toolTip.hidetip()
+    widget.bind('<Enter>', enter)
+    widget.bind('<Leave>', leave)
+
 
 class GifLabel(Label):       #only gif player 
     global GifLabel 
@@ -104,19 +143,29 @@ def on_closing(*arg):
 def under__construction(*args):
     print('This feature is under construction')
 
+def add_hyperlink(section, tag):
+    # when you insert text, you can directly give it tags with 
+    # text.insert(<index>, <text>, [tag1, tag2, ...])
+    license_text.insert('end', section + '\n\n', ('link', tag))
+    license_text.tag_bind(tag, '<Button-1>', lambda e: webbrowser.open(tag))
+
 def about(*args):
+    global license_text
     license_prompt = Toplevel()
     license_prompt.title('About')
     license_prompt.geometry('700x400')
     license_prompt.iconphoto(False,i_button_img)
     license_text = Text(license_prompt,background="#2c2c2c", foreground="#888")#justify = CENTER,)
     license_text.pack(fill='both', expand=True)
+    license_text.tag_configure('link', foreground='cyan', underline=True)
+    
     license_text.tag_config('justified', justify=CENTER)
     #license_text.tag_config("here", background="#2c2c2c", foreground="#888")  #.tag_add("center", 1.0, "end")
     f = open('LICENSE')
     license_lines = f.readlines()
     for line in license_lines:
         license_text.insert('end', line, 'justified')
+    add_hyperlink('about', 'https://gpstudiolaboftech.github.io/')
     license_text['state'] = DISABLED
     f.close()
     #webbrowser.open("https://gpstudiolaboftech.github.io/")
@@ -205,6 +254,7 @@ def tuby_normal(root):
     i_icon = Label(app,image = i_button_img,bg='#2c2c2c')
     i_icon.place(x=555,y=10)
     i_icon.bind('<Button-1>',about)
+    CreateToolTip(i_icon,text='info')
     url_label = Label(app,image = url_img,bg='#2c2c2c')
     url_label.place(x=30,y=140)
     url = Entry(app, width = 35,border=1, relief= SUNKEN , font = ('verdana',15))
@@ -220,7 +270,6 @@ def tuby_normal(root):
     download_text.place(x=200,y=218)
     download_text.bind('<Button-1>', validation)
     download_text.bind('<Enter>', OnHover_Download)
-
 
 def tuby_plus(root):
     global app
@@ -282,7 +331,7 @@ def yt_downloader():
     global file_size
        
     canvas.place(relx=0.5, rely=0.48, anchor=CENTER)#x=250,y=150)
-    loading_label.config(anchor = CENTER)
+    loading_label.config(anchor = CENTERtuby_plus)
     loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
     app.pack_forget()
     
@@ -324,7 +373,7 @@ def yt_downloader():
 
 def fb_download():
     
-    """Download the video in HD or SD quality"""
+    """Download the video in HD or SD qtuby_plusality"""
     canvas.place(relx=0.5, rely=0.48, anchor=CENTER)#x=250,y=150)
     loading_label.config(anchor = CENTER)
     loading_label.place(relx=0.5, rely=0.70, anchor=CENTER)
@@ -507,7 +556,7 @@ def structure():
     i_button_img = i_button_img.resize((25,25),Image.ANTIALIAS)
     i_button_img = ImageTk.PhotoImage(i_button_img)
 
-    tuby_normal(root)
+    tuby_plus(root)
     loading_img_res = resource_path(srcPath + '/assets/dark-loading.gif')
     loading_gif = GifLabel(root,loading_img_res,100)
     

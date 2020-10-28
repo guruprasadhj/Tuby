@@ -1,8 +1,22 @@
+#!/usr/bin/python
 module_error = False
 import time
 start_time = time.time()
 import os
 print(" [   OK   ] - Started OS module successfully imported \n  ")
+print(" [  INFO  ] - Operating system name: " , os.name,'\n' )
+import platform
+print(" [   OK   ] - Started platform module successfully imported \n  ")
+print(" [  INFO  ] - Platform name:",platform.system(),'\n')
+print(" [  INFO  ] - Platform release:",platform.release(),'\n')
+print(' [  INFO  ] - Platform processor:', platform.processor(),'\n') 
+print(' [  INFO  ] - Platform architecture:', platform.architecture(),'\n')
+print(' [  INFO  ] - Machine type:', platform.machine(),'\n')
+print(' [  INFO  ] - Systems network name:', platform.node(),'\n') 
+print(' [  INFO  ] - Platform information:', platform.platform(),'\n') 
+print(' [  INFO  ] - Python compiler:', platform.python_compiler(),'\n') 
+print(' [  INFO  ] - Python SCM:', platform.python_compiler(),'\n')
+print(' [  INFO  ] - Python implementation:', platform.python_implementation(),'\n') 
 import sys
 print(" [   OK   ] - Started SYS module successfully imported \n  ")
 import threading
@@ -19,7 +33,8 @@ print(" [   OK   ] - Started tkinter module successfully imported \n  ")
 from turtle import *
 print(" [   OK   ] - Started turtle module successfully imported \n  ")
 
-print("Inbuilt Module imported Successfully ")
+print("Inbuilt Module imported Successfully \n")
+
 try:
     import pyperclip
 except ModuleNotFoundError:
@@ -46,20 +61,17 @@ except ModuleNotFoundError:
 try:
     from tqdm import tqdm
     print(" [   OK   ] - Started tqdm module successfully imported \n  ")
-
 except ModuleNotFoundError:
     print(" [ Error! ] - tqdm is not Installed ")
 
 
 try:
     import tuby.validate
-    
 except ModuleNotFoundError:
     import validate
 
 try:
     import tuby.dengine
-    
 except ModuleNotFoundError:
     import dengine
 
@@ -85,14 +97,17 @@ def print_slow(str):
 if module_error:
     
     print_slow('Module error Found !!')
+    print('We have tweaked the program according to our app' )
+    choice = str(input('Do you Want Install (Y/N) : '))
+    if choice=='Y'or'y'or'yes':
+        print('Yes')
+    elif choice=='N'or'n'or'no':
+        print('wrong answer')
+    else:
+        print('W')
+
 
 else:
-    #print_slow("All modules are installed Successfully ")
-#    os.system('clear')
-#    print("Welcome to Tuby Downloader")
-#    print(banner)
-#    print("Copyright (c) 2020 guruprasadh_j")
-#    print("--- %s seconds ---" % (time.time() - start_time))
     page_Num = 1
     srcPath = os.path.dirname(os.path.abspath(__file__))
 
@@ -106,6 +121,53 @@ def resource_path(relative_path):
     except Exception:
         base_path = os.path.dirname(os.path.abspath(__file__)) #os.path.abspath(".")
         return os.path.join(base_path, relative_path)
+
+#######################################################################################################################
+# Custom Tool Tip in tkinter
+class ToolTip(object):
+
+    def __init__(self, widget):
+        self.widget = widget
+        self.tipwindow = None
+        self.id = None
+        self.x = self.y = 0
+
+    def showtip(self, text):
+        "Display text in tooltip window"
+        self.text = text
+        if self.tipwindow or not self.text:
+            return
+        x, y, cx, cy = self.widget.bbox("insert")
+        x = x + self.widget.winfo_rootx() + 20
+        y = y + cy + self.widget.winfo_rooty() + 20
+        self.tipwindow = tw = Toplevel(self.widget)
+        tw.wm_overrideredirect(1)
+        tw.wm_geometry("+%d+%d" % (x, y))
+        label = Label(tw, text=self.text, justify=LEFT,
+                      background="#2c2c2c", foreground='white' , relief=SOLID, borderwidth=1,
+                      font=("tahoma", "8", "normal"))
+        label.pack(ipadx=1)
+
+    def hidetip(self):
+        tw = self.tipwindow
+        self.tipwindow = None
+        if tw:
+            tw.destroy()
+
+def CreateToolTip(widget, text):
+    toolTip = ToolTip(widget)
+    def enter(event):
+        toolTip.showtip(text)
+    def leave(event):
+        toolTip.hidetip()
+    widget.bind('<Enter>', enter)
+    widget.bind('<Leave>', leave)
+
+def add_hyperlink(section, tag):
+    # when you insert text, you can directly give it tags with 
+    # text.insert(<index>, <text>, [tag1, tag2, ...])
+    license_text.insert('end', section + '\n\n', ('link', tag))
+    license_text.tag_bind(tag, '<Button-1>', lambda e: webbrowser.open(tag))
 
 ########################################################################################################################
 #COLOUR CODE
@@ -159,7 +221,6 @@ def mode_switch():
         Download_label.config(bg='#f3f3f3')
         status_text.config(bg='#f3f3f3',fg='#2c2c2c')
         status.config(bg='#f3f3f3',fg='#2c2c2c')
-        loading_img = ('light-loading.gif')
         btnState = True
 
 #Change Frame
@@ -249,18 +310,20 @@ def loader(*args):
         t.hideturtle()
 
 def about(*args):
+    global license_text
     license_prompt = Toplevel()
     license_prompt.title('About')
     license_prompt.geometry('700x400')
     license_prompt.iconphoto(False,i_button_img)
-    license_text = Text(license_prompt,background="#2c2c2c", foreground="#888")#justify = CENTER,)
+    license_text = Text(license_prompt,background="#2c2c2c", foreground="#888")
     license_text.pack(fill='both', expand=True)
     license_text.tag_config('justified', justify=CENTER)
-    #license_text.tag_config("here", background="#2c2c2c", foreground="#888")  #.tag_add("center", 1.0, "end")
+    license_text.tag_configure('link', foreground='cyan', underline=True)    
     f = open('LICENSE')
     license_lines = f.readlines()
     for line in license_lines:
         license_text.insert('end', line, 'justified')
+    add_hyperlink('about', 'https://gpstudiolaboftech.github.io/')
     license_text['state'] = DISABLED
     f.close()
     #webbrowser.open("https://gpstudiolaboftech.github.io/")
@@ -406,6 +469,7 @@ def tuby_regular(root):
     i_icon = Label(app,image = i_button_img,bg='#2c2c2c')
     i_icon.place(x=560,y=10)
     i_icon.bind('<Button-1>',about)
+    CreateToolTip(i_icon,text='info')
     url_label = Label(app,image = url_img,bg='#2c2c2c')
     url_label.place(x=30,y=140)
     url = Entry(app, width = 35,border=1, relief= SUNKEN , font = ('verdana',15))
@@ -431,7 +495,7 @@ def tuby_plus(root):
 
 
 def structure():
-    global page_Num , srcPath , root , title_bar , close_button , add_button , minus_button , btnState , dark_img , light_img , mode , offline_img , online_img ,  downloader_img , fb_downloader_img , url_img , download_img , fb_download_img , loading_gif , loading_label , i_button_img , copyright , loaderThread 
+    global page_Num , srcPath , root , title_bar , close_button , add_button , minus_button , btnState , dark_img , light_img , mode , offline_img , online_img ,  downloader_img , fb_downloader_img , url_img , download_img , fb_download_img , loading_label , i_button_img , copyright , loaderThread 
 
     root = Tk(className='Tuby')
     root.protocol("WM_DELETE_WINDOW", on_closing)
@@ -451,7 +515,7 @@ def structure():
     title_bar = Frame(root, bg='#212121', relief='raised', bd=0, height=20, width=600)
     close_button = Button(title_bar ,text='X', command=on_closing,   width=1, bg="#090909", fg="#888",activebackground='#ff453a',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
     add_button   = Button(title_bar ,text='+', command=changepage,   width=1, bg="#090909", fg="#888",activebackground='#ff9f0a',activeforeground='black', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
-    minus_button = Button(title_bar ,text='_', command=root.destroy, width=1, bg="#090909", fg="#888",activebackground='#32d74b',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
+    minus_button = Button(title_bar ,text='_', command=root.iconify, width=1, bg="#090909", fg="#888",activebackground='#32d74b',activeforeground='white', bd=0,highlightcolor="#090909", highlightbackground="#090909",)
     btnState  = False 
     
     dark_img_res =resource_path(srcPath + '/assets/dark-mode.png')
@@ -529,7 +593,7 @@ def structure():
 
 
 if __name__ == "__main__":
-    os.system('clear')
+    #os.system('clear')
     print("Welcome to Tuby Downloader")
     print(banner)
     print("Copyright (c) 2020 guruprasadh_j")

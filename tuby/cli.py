@@ -33,5 +33,19 @@ def main():
 
     
 if __name__ == "__main__":
-    
-    main()
+    import os, platform
+    #os.system('clear')
+    print(" [  INFO  ] - Operating system name: " , os.name,'\n' )
+
+    print(" [  INFO  ] - Platform name:",platform.system(),'\n')
+    print(" [  INFO  ] - Platform release:",platform.release(),'\n')
+    print(' [  INFO  ] - Platform processor:', platform.processor(),'\n') 
+    print(' [  INFO  ] - Platform architecture:', platform.architecture(),'\n')
+    print(' [  INFO  ] - Machine type:', platform.machine(),'\n')
+    print(' [  INFO  ] - Systems network name:', platform.node(),'\n') 
+    print(' [  INFO  ] - Platform information:', platform.platform(),'\n') 
+    print(' [  INFO  ] - Python compiler:', platform.python_compiler(),'\n') 
+    print(' [  INFO  ] - Python SCM:', platform.python_compiler(),'\n')
+    print(' [  INFO  ] - Python implementation:', platform.python_implementation(),'\n') 
+
+    #main()
