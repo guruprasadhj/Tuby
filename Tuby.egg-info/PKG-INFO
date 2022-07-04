@@ -1,0 +1,20 @@
+Metadata-Version: 2.1
+Name: Tuby
+Version: 4.5.0
+Summary: Super Fast YouTube Downloader 
+Home-page: https://github.com/guruprasadhj/Tuby
+Author: Guru Prasadh J.
+Author-email: guruprasadh_j@outlook.com
+License: MIT
+Project-URL: Bug Reports, https://github.com/guruprasadhj/Tuby/issues
+Project-URL: Source, https://github.com/guruprasadhj/Tuby/
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Downloader
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.8
+License-File: LICENSE
+
+UNKNOWN
+

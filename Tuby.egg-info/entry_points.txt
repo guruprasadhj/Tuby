@@ -1,0 +1,4 @@
+[console_scripts]
+tuby-cli = tuby.cli:main
+tuby-gui = tuby.gui:ui
+

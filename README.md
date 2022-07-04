@@ -32,6 +32,17 @@ pip install .
 _____
 ## Dependency to Run Code
 
+### Dark Theme :
+<img src="Image/1.png" align="center" />
+
+### Light Theme :
+<img src="Image/2.png" align="center" />
+
+### While pasting Fb Video :
+<img src="Image/3.png" align="center" />
+
+_____
+
 ### packages
 - python-3.x
 - python-tk
@@ -41,6 +52,8 @@ _____
 - PIL(pillow)
 - PyperClip
 ___
+## Demo Pictures
+
 ## Contribute
 
 Contributions are always welcome!\
