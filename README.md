@@ -1,4 +1,4 @@
-<img src="Image/ytlogo.png" align="right" />
+<img src="Image/favicon.png" align="right" />
 
 ## Tuby
 
