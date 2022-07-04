@@ -1,11 +1,16 @@
-<img src="Image/favicon.png" align="right" />
+
 
 ## Tuby
+<img src="Image/banner.png">
+
+<img src="Image/favicon.png" align="right" />
 
 ### Super Fast ⚡ . YouTube ▶️ . Downloader ⬇️  
 #### If you have Doubt in it. Check it Out.
 ⚠ (The software and documentation is in development stage)\
 Tuby is freeware and Open-Source Software written in python, which can download youtube videos at super fast ⚡. For now the software is in Initial Stage. It may take time to construct my entire Idea.
+
+___
 ## Features
 - Light-Weight 💨
 - Super FAST 🔥
@@ -32,10 +37,10 @@ pip install .
 _____
 ## Dependency to Run Code
 
-### Dark Theme :
+### Dark Mode :
 <img src="Image/1.png" align="center" />
 
-### Light Theme :
+### Light Mode :
 <img src="Image/2.png" align="center" />
 
 ### While pasting Fb Video :
